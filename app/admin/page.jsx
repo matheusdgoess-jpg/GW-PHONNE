@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import CatalogManager from '@/components/admin/CatalogManager';
 import ContentManager from '@/components/admin/ContentManager';
+import PostsManager from '@/components/admin/PostsManager';
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -42,6 +43,13 @@ export default function AdminDashboard() {
             Catálogo
           </button>
           <button
+            className={`admin-tab ${tab === 'dicas' ? 'active' : ''}`}
+            onClick={() => setTab('dicas')}
+            type="button"
+          >
+            Dicas
+          </button>
+          <button
             className={`admin-tab ${tab === 'conteudo' ? 'active' : ''}`}
             onClick={() => setTab('conteudo')}
             type="button"
@@ -50,7 +58,9 @@ export default function AdminDashboard() {
           </button>
         </div>
 
-        {tab === 'catalogo' ? <CatalogManager /> : <ContentManager />}
+        {tab === 'catalogo' ? <CatalogManager /> : null}
+        {tab === 'dicas' ? <PostsManager /> : null}
+        {tab === 'conteudo' ? <ContentManager /> : null}
       </div>
     </div>
   );

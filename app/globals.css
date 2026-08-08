@@ -899,6 +899,191 @@ nav.wrap{
   border-radius:16px;
 }
 
+/* ---------- DICAS (blog) ---------- */
+.dicas-hero{border-bottom:1px solid var(--line);padding-bottom:64px;}
+.dicas-title{
+  font-size:clamp(2rem,4vw,3rem);
+  line-height:1.15;
+  max-width:20ch;
+  margin-top:6px;
+}
+.dicas-lede{
+  margin-top:20px;
+  color:var(--grey);
+  font-size:1.05rem;
+  line-height:1.65;
+  max-width:48ch;
+}
+
+.posts-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(300px,1fr));
+  gap:18px;
+}
+.post-card{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  padding:28px 26px;
+  border-radius:16px;
+  border:1px solid var(--line);
+  background:linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0));
+  background-color:var(--panel);
+  transition:transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+}
+.post-card:hover{
+  transform:translateY(-3px);
+  border-color:rgba(201,166,103,0.35);
+  box-shadow:0 20px 44px rgba(0,0,0,0.34);
+}
+.post-card-date{
+  font-size:0.7rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--gold);
+}
+.post-card h2{
+  font-size:1.14rem;
+  font-weight:600;
+  line-height:1.35;
+  color:var(--off);
+}
+.post-card p{
+  font-size:0.9rem;
+  color:var(--grey);
+  line-height:1.6;
+  flex:1;
+}
+.post-card-link{
+  font-size:0.83rem;
+  font-weight:600;
+  color:var(--red);
+  margin-top:4px;
+}
+
+.post-wrap{border-bottom:none;}
+.post-inner{max-width:720px;}
+.post-back{
+  display:inline-block;
+  font-size:0.84rem;
+  color:var(--grey);
+  margin-bottom:26px;
+  transition:color .2s ease;
+}
+.post-back:hover{color:var(--gold);}
+.post-date{
+  display:block;
+  font-size:0.7rem;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:12px;
+}
+.post-title{
+  font-size:clamp(1.9rem,3.6vw,2.6rem);
+  line-height:1.2;
+  color:var(--off);
+}
+.post-excerpt{
+  margin-top:18px;
+  font-size:1.1rem;
+  line-height:1.6;
+  color:var(--grey);
+  padding-bottom:26px;
+  border-bottom:1px solid var(--line);
+}
+
+.post-body{margin-top:30px;}
+.post-body p{
+  color:#cec8bf;
+  font-size:1.02rem;
+  line-height:1.78;
+  margin-bottom:20px;
+}
+.post-body strong{color:var(--off);font-weight:600;}
+.post-h{
+  font-size:1.32rem;
+  font-weight:600;
+  color:var(--off);
+  margin:38px 0 16px;
+  padding-left:14px;
+  border-left:3px solid var(--red);
+}
+.post-list{
+  list-style:none;
+  margin:0 0 22px;
+  display:flex;
+  flex-direction:column;
+  gap:11px;
+}
+.post-list li{
+  position:relative;
+  padding-left:24px;
+  color:#cec8bf;
+  font-size:1rem;
+  line-height:1.65;
+}
+.post-list li::before{
+  content:"—";
+  position:absolute;left:0;top:0;
+  color:var(--red);
+}
+.post-list-num{counter-reset:passo;}
+.post-list-num li::before{
+  counter-increment:passo;
+  content:counter(passo);
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.78rem;
+  color:var(--red);
+  font-weight:600;
+}
+
+.post-cta{
+  margin-top:48px;
+  padding:32px 30px;
+  border-radius:16px;
+  border:1px solid rgba(226,58,42,0.3);
+  background:
+    radial-gradient(circle at 20% 0%, rgba(226,58,42,0.1), transparent 60%),
+    var(--panel);
+}
+.post-cta h3{font-size:1.25rem;font-weight:600;margin-bottom:10px;color:var(--off);}
+.post-cta p{color:var(--grey);line-height:1.65;margin-bottom:22px;font-size:0.96rem;}
+.post-cta .btn-row{display:flex;gap:12px;flex-wrap:wrap;}
+.post-cta .btn-wa{width:auto;}
+
+.post-outras{margin-top:56px;}
+.post-outras h3{font-size:1.2rem;font-weight:600;margin-bottom:20px;color:var(--off);}
+.post-outras .post-card{padding:22px 20px;}
+.post-outras .post-card h2{font-size:1rem;}
+
+/* lista de dicas no painel */
+.admin-posts{display:flex;flex-direction:column;gap:10px;}
+.admin-post-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:18px;
+  padding:18px 20px;
+  border:1px solid #1d2127;
+  border-radius:12px;
+  background:#0e1013;
+  flex-wrap:wrap;
+}
+.admin-post-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.98rem;}
+.admin-post-meta{font-size:0.72rem;color:#7c8794;margin-top:4px;}
+.admin-post-excerpt{font-size:0.84rem;color:#9aa4b2;margin-top:8px;max-width:60ch;line-height:1.5;}
+.admin-post-actions{display:flex;gap:8px;flex-shrink:0;flex-wrap:wrap;}
+.admin-card code{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.82em;
+  background:#0b0d10;
+  border:1px solid #262b33;
+  padding:1px 5px;
+  border-radius:5px;
+  color:#9ec5ff;
+}
+
 /* ---------- TICKET / LOCATION ---------- */
 .ticket-wrap{
   display:grid;

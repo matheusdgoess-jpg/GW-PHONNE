@@ -50,6 +50,7 @@ export default async function HomePage() {
           <div className="navlinks">
             <a href="#catalogo">Catálogo</a>
             <a href="#servicos">Serviços</a>
+            <a href="/dicas">Dicas</a>
             <a href="#localizacao">Localização</a>
             <a href="#faq">FAQ</a>
             <a href="#contato">Contato</a>
@@ -347,6 +348,7 @@ export default async function HomePage() {
           </div>
           <div className="footer-links">
             <a href="#catalogo">Catálogo</a>
+            <a href="/dicas">Dicas</a>
             <a href="#servicos">Serviços</a>
             <a href="#localizacao">Localização</a>
             <a href={instagram} target="_blank" rel="noopener">

@@ -1,10 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: {
-    remotePatterns: [
-      { protocol: 'https', hostname: '*.public.blob.vercel-storage.com' },
-    ],
-  },
+  // As fotos do catálogo saem da nossa própria rota /api/foto, então não há
+  // domínio externo de imagem para liberar aqui.
 };
 
 export default nextConfig;

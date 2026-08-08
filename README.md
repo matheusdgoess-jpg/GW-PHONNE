@@ -2,6 +2,8 @@
 
 Site institucional da GW Phone — assistência técnica especializada em Apple e venda de iPhones novos e seminovos em Botucatu-SP.
 
+**Ao vivo:** https://gw-phonne.vercel.app (deploy automático via Vercel a cada push na `main`)
+
 ## Estrutura
 
 - `index.html` — página única (hero, serviços, prazos, localização, FAQ e contato via WhatsApp)

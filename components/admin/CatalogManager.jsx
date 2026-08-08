@@ -247,13 +247,34 @@ export default function CatalogManager() {
               <div className="admin-dropzone">
                 {form.imageUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={form.imageUrl} alt="Preview" />
+                  <img src={form.imageUrl} alt="Pré-visualização" />
                 ) : (
                   <div className="ph-64">sem foto</div>
                 )}
-                <div>
-                  <input type="file" accept="image/*" onChange={handleUpload} disabled={uploading} />
-                  {uploading ? <p className="hint" style={{ margin: '6px 0 0' }}>Enviando…</p> : null}
+                <div className="admin-foto-opcoes">
+                  <div>
+                    <span className="admin-foto-rotulo">Enviar do computador</span>
+                    <input type="file" accept="image/*" onChange={handleUpload} disabled={uploading} />
+                    {uploading ? <p className="hint" style={{ margin: '6px 0 0' }}>Enviando…</p> : null}
+                  </div>
+                  <div>
+                    <span className="admin-foto-rotulo">ou colar o endereço de uma imagem</span>
+                    <input
+                      type="text"
+                      value={form.imageUrl}
+                      onChange={(e) => setForm((f) => ({ ...f, imageUrl: e.target.value.trim() }))}
+                      placeholder="https://..."
+                    />
+                  </div>
+                  {form.imageUrl ? (
+                    <button
+                      className="admin-btn admin-btn-danger"
+                      type="button"
+                      onClick={() => setForm((f) => ({ ...f, imageUrl: '' }))}
+                    >
+                      Remover foto
+                    </button>
+                  ) : null}
                 </div>
               </div>
             </div>

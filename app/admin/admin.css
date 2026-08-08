@@ -142,7 +142,25 @@
   border:1.5px dashed #262b33;border-radius:10px;padding:20px;
   display:flex;align-items:center;gap:16px;flex-wrap:wrap;
 }
-.admin-dropzone img{width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid #262b33;}
+.admin-dropzone img{
+  width:78px;height:78px;object-fit:contain;border-radius:8px;
+  border:1px solid #262b33;background:#0b0d10;padding:4px;
+}
+.admin-foto-opcoes{flex:1;min-width:240px;display:flex;flex-direction:column;gap:12px;}
+.admin-foto-rotulo{
+  display:block;
+  font-size:0.74rem;
+  color:#7c8794;
+  margin-bottom:5px;
+}
+.admin-foto-opcoes input[type="text"]{
+  width:100%;
+  background:#0e1013;border:1px solid #262b33;color:#e7e9ec;
+  padding:9px 11px;border-radius:8px;font-size:0.86rem;font-family:inherit;
+  outline:none;transition:border-color .18s ease;
+}
+.admin-foto-opcoes input[type="text"]:focus{border-color:#5b9dff;}
+.admin-foto-opcoes .admin-btn-danger{align-self:flex-start;}
 .admin-dropzone .ph-64{
   width:64px;height:64px;border-radius:8px;background:#181b20;
   display:flex;align-items:center;justify-content:center;color:#4a5561;font-size:0.65rem;

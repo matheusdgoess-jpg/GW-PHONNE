@@ -1,34 +1,20 @@
 'use client';
 import { useEffect } from 'react';
 import { useCart } from './CartProvider';
-import { formatPrice, conditionLabel } from '@/lib/format';
+import { conditionLabel } from '@/lib/format';
 
 function buildWhatsAppMessage(items) {
   const linhas = items.map((i) => {
-    const nome = [i.model, i.storage].filter(Boolean).join(' ');
-    const partes = [`• ${nome} (${conditionLabel(i.condition)})`];
+    const partes = [`• ${i.model} (${conditionLabel(i.condition)})`];
     if (i.qty > 1) partes.push(`${i.qty} unidades`);
-    partes.push(i.price > 0 ? formatPrice(i.price) : 'a consultar');
     return partes.join(' — ');
   });
-
-  const comPreco = items.filter((i) => i.price > 0);
-  const total = comPreco.reduce((soma, i) => soma + i.price * i.qty, 0);
-  const temSemPreco = comPreco.length !== items.length;
-
-  let rodape = '';
-  if (total > 0) {
-    rodape = temSemPreco
-      ? `\n\nParcial (itens com preço): ${formatPrice(total)}`
-      : `\n\nTotal: ${formatPrice(total)}`;
-  }
 
   return (
     'Olá! Vim pelo site e tenho interesse ' +
     (items.length === 1 ? 'neste aparelho:' : 'nestes aparelhos:') +
     `\n\n${linhas.join('\n')}` +
-    rodape +
-    '\n\nGostaria de mais informações, por favor.'
+    '\n\nGostaria de saber a disponibilidade e o valor, por favor.'
   );
 }
 
@@ -58,10 +44,6 @@ export default function CartDrawer() {
       document.body.style.overflow = anterior;
     };
   }, [open, setOpen]);
-
-  const comPreco = items.filter((i) => i.price > 0);
-  const total = comPreco.reduce((soma, i) => soma + i.price * i.qty, 0);
-  const temSemPreco = comPreco.length !== items.length;
 
   const link = items.length
     ? `https://wa.me/${whatsapp}?text=${encodeURIComponent(buildWhatsAppMessage(items))}`
@@ -115,12 +97,7 @@ export default function CartDrawer() {
                 </div>
                 <div className="cart-info">
                   <div className="cart-item-title">{item.model}</div>
-                  <div className="cart-item-meta mono">
-                    {[item.storage, conditionLabel(item.condition)].filter(Boolean).join(' · ')}
-                  </div>
-                  <div className="cart-item-price">
-                    {item.price > 0 ? formatPrice(item.price) : 'Consultar'}
-                  </div>
+                  <div className="cart-item-meta mono">{conditionLabel(item.condition)}</div>
                   <div className="cart-qty">
                     <button
                       type="button"
@@ -153,17 +130,9 @@ export default function CartDrawer() {
 
         {items.length > 0 ? (
           <footer className="cart-foot">
-            {total > 0 ? (
-              <div className="cart-total">
-                <span>{temSemPreco ? 'Parcial' : 'Total'}</span>
-                <strong>{formatPrice(total)}</strong>
-              </div>
-            ) : null}
-            {temSemPreco ? (
-              <p className="cart-note">
-                Alguns itens estão sem preço no site — a gente confirma tudo no WhatsApp.
-              </p>
-            ) : null}
+            <p className="cart-note">
+              Os valores são passados no atendimento, conforme a disponibilidade de cada aparelho.
+            </p>
             <a className="btn btn-wa" href={link} target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.29-1.39a9.9 9.9 0 0 0 4.75 1.21h.01c5.46 0 9.9-4.45 9.9-9.91C21.96 6.45 17.5 2 12.04 2zm5.8 14.03c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.12.11-1.8-.11-.42-.13-.96-.31-1.65-.6-2.9-1.26-4.8-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3 0-1.42.75-2.13 1.01-2.42.27-.29.58-.36.78-.36.19 0 .39 0 .56.01.18.01.42-.07.65.5.24.58.83 2 .9 2.15.07.15.11.32.02.51-.09.19-.14.31-.27.48-.14.17-.29.37-.41.5-.14.15-.28.3-.12.6.16.29.71 1.18 1.53 1.91 1.05.94 1.94 1.24 2.23 1.38.29.14.46.12.63-.07.17-.19.72-.84.91-1.13.19-.29.38-.24.63-.15.26.1 1.63.77 1.91.91.28.14.47.21.53.33.07.12.07.68-.17 1.36z" />

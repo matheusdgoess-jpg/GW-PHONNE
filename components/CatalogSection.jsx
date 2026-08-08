@@ -1,7 +1,7 @@
 'use client';
 import { useMemo, useState } from 'react';
 import { useCart } from './CartProvider';
-import { formatPrice, conditionLabel } from '@/lib/format';
+import { conditionLabel } from '@/lib/format';
 
 const FILTERS = [
   { key: 'todos', label: 'Todos' },
@@ -77,7 +77,7 @@ export default function CatalogSection({ items, whatsapp }) {
           <div className="catalog-grid">
             {visible.map((item) => {
               const jaAdicionado = idsNoCarrinho.has(item.id);
-              const nome = [item.model, item.storage].filter(Boolean).join(' ');
+              const nome = item.model;
               const mensagem = encodeURIComponent(
                 `Olá! Tenho interesse no ${nome} (${conditionLabel(item.condition)}). Ainda está disponível?`,
               );
@@ -97,13 +97,7 @@ export default function CatalogSection({ items, whatsapp }) {
                   </div>
                   <div className="product-body">
                     <div className="product-title">{item.model}</div>
-                    {item.storage ? <div className="product-storage mono">{item.storage}</div> : null}
                     {item.description ? <div className="product-desc">{item.description}</div> : null}
-                    {item.price > 0 ? (
-                      <div className="product-price">{formatPrice(item.price)}</div>
-                    ) : (
-                      <div className="product-price ask">Consulte disponibilidade</div>
-                    )}
                     <div className="product-actions">
                       <button
                         type="button"

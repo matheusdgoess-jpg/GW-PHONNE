@@ -3,17 +3,11 @@ import { useEffect, useState } from 'react';
 
 const EMPTY_FORM = {
   model: '',
-  storage: '',
   condition: 'seminovo',
-  price: '',
   description: '',
   imageUrl: '',
   available: true,
 };
-
-function formatPrice(price) {
-  return Number(price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-}
 
 export default function CatalogManager() {
   const [items, setItems] = useState([]);
@@ -53,9 +47,7 @@ export default function CatalogManager() {
     setEditingId(item.id);
     setForm({
       model: item.model || '',
-      storage: item.storage || '',
       condition: item.condition || 'seminovo',
-      price: item.price ? String(item.price) : '',
       description: item.description || '',
       imageUrl: item.imageUrl || '',
       available: item.available !== false,
@@ -99,10 +91,7 @@ export default function CatalogManager() {
     setSaving(true);
     setMsg(null);
     try {
-      const payload = {
-        ...form,
-        price: form.price === '' ? 0 : Number(form.price),
-      };
+      const payload = { ...form };
       const url = editingId ? `/api/admin/catalog/${editingId}` : '/api/admin/catalog';
       const method = editingId ? 'PUT' : 'POST';
       const res = await fetch(url, {
@@ -198,16 +187,6 @@ export default function CatalogManager() {
                 />
               </div>
               <div className="admin-field">
-                <label htmlFor="storage">Armazenamento</label>
-                <input
-                  id="storage"
-                  type="text"
-                  value={form.storage}
-                  onChange={(e) => setForm((f) => ({ ...f, storage: e.target.value }))}
-                  placeholder="128GB"
-                />
-              </div>
-              <div className="admin-field">
                 <label htmlFor="condition">Condição</label>
                 <select
                   id="condition"
@@ -218,27 +197,16 @@ export default function CatalogManager() {
                   <option value="novo">Novo</option>
                 </select>
               </div>
-              <div className="admin-field">
-                <label htmlFor="price">Preço (R$)</label>
-                <input
-                  id="price"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={form.price}
-                  onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))}
-                  placeholder="Ex: 2500"
-                />
-              </div>
             </div>
 
             <div className="admin-field">
-              <label htmlFor="description">Descrição (opcional)</label>
+              <label htmlFor="description">Descrição</label>
               <textarea
                 id="description"
                 value={form.description}
                 onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-                placeholder="Detalhes do aparelho, estado de conservação, etc."
+                rows={4}
+                placeholder="O que o cliente precisa saber sobre esse aparelho."
               />
             </div>
 
@@ -328,8 +296,7 @@ export default function CatalogManager() {
               <div className="admin-product-body">
                 <div className="admin-product-title">{item.model}</div>
                 <div className="admin-product-meta">
-                  {item.storage ? `${item.storage} · ` : ''}
-                  {item.price > 0 ? formatPrice(item.price) : 'Sem preço definido'}
+                  {item.description ? item.description : 'Sem descrição'}
                 </div>
                 <div className="admin-product-actions">
                   <button className="admin-btn admin-btn-ghost" type="button" onClick={() => openEdit(item)}>

@@ -51,9 +51,7 @@ export default function CartProvider({ whatsapp, children }) {
           {
             id: product.id,
             model: product.model,
-            storage: product.storage || '',
             condition: product.condition,
-            price: Number(product.price) || 0,
             imageUrl: product.imageUrl || '',
             qty: 1,
           },

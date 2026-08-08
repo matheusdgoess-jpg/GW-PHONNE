@@ -3,6 +3,8 @@ import ScrollReveal from '@/components/ScrollReveal';
 import HeroGlow from '@/components/HeroGlow';
 import ContactTabs from '@/components/ContactTabs';
 import CatalogSection from '@/components/CatalogSection';
+import CartProvider from '@/components/CartProvider';
+import CartButton from '@/components/CartButton';
 
 // Conteúdo e catálogo vêm do Blob e podem mudar a qualquer momento pelo
 // painel /admin — sempre renderiza fresco, sem cache estático de build.
@@ -34,7 +36,7 @@ export default async function HomePage() {
   };
 
   return (
-    <>
+    <CartProvider whatsapp={contacts.loja}>
       {/* eslint-disable-next-line react/no-danger */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <ScrollReveal />
@@ -52,9 +54,12 @@ export default async function HomePage() {
             <a href="#faq">FAQ</a>
             <a href="#contato">Contato</a>
           </div>
-          <a className="nav-cta" href={instagram} target="_blank" rel="noopener">
-            Instagram
-          </a>
+          <div className="nav-actions">
+            <CartButton />
+            <a className="nav-cta" href={instagram} target="_blank" rel="noopener">
+              Instagram
+            </a>
+          </div>
         </nav>
       </header>
 
@@ -105,7 +110,9 @@ export default async function HomePage() {
               <span className="section-tag">Vitrine</span>
               <h2>Catálogo de iPhones.</h2>
             </div>
-            <p>Do iPhone 11 ao 17 Pro Max — modelos novos e seminovos, com procedência verificada.</p>
+            <p>
+              Toque na seta para abrir. Monte seu carrinho e envie tudo de uma vez pelo WhatsApp.
+            </p>
           </div>
           <CatalogSection items={catalog} whatsapp={contacts.loja} />
         </div>
@@ -363,6 +370,6 @@ export default async function HomePage() {
         </svg>
         <span className="wa-label">Chamar no WhatsApp</span>
       </a>
-    </>
+    </CartProvider>
   );
 }

@@ -8,10 +8,11 @@
   "trailingSlash": false,
   "redirects": [
     { "source": "/%23inicio", "destination": "/", "permanent": true },
-    { "source": "/gestao", "destination": "/PainelIMG", "permanent": false }
+    { "source": "/gestao", "destination": "/painel-img-tech", "permanent": false },
+    { "source": "/PainelIMG", "destination": "/painel-img-tech", "permanent": true }
   ],
   "rewrites": [
-    { "source": "/PainelIMG", "destination": "/login" }
+    { "source": "/painel-img-tech", "destination": "/login" }
   ],
   "headers": [
     {
@@ -24,7 +25,7 @@
       ]
     },
     {
-      "source": "/(PainelIMG|login|admin)(.html)?",
+      "source": "/(painel-img-tech|PainelIMG|login|admin)(.html)?",
       "headers": [
         { "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" },
         { "key": "Cache-Control", "value": "no-store" }

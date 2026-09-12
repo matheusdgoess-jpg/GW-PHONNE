@@ -8,7 +8,11 @@
   "trailingSlash": false,
   "redirects": [
     { "source": "/%23inicio", "destination": "/", "permanent": true },
-    { "source": "/gestao", "destination": "/login", "permanent": false }
+    { "source": "/gestao", "destination": "/PainelIMG", "permanent": false },
+    { "source": "/login", "destination": "/PainelIMG", "permanent": false }
+  ],
+  "rewrites": [
+    { "source": "/PainelIMG", "destination": "/login.html" }
   ],
   "headers": [
     {
@@ -21,7 +25,7 @@
       ]
     },
     {
-      "source": "/(login|admin)(.html)?",
+      "source": "/(PainelIMG|login|admin)(.html)?",
       "headers": [
         { "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" },
         { "key": "Cache-Control", "value": "no-store" }

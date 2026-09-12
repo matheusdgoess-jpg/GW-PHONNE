@@ -10,7 +10,7 @@ async function redirectAuthenticatedUser() {
   const { data } = await client.auth.getSession();
   if (!data.session) return;
   const { data: member } = await client.from('team_members').select('active,roles').eq('user_id', data.session.user.id).maybeSingle();
-  if (member?.active && member.roles?.includes('admin')) location.replace('admin.html');
+  if (member?.active && member.roles?.includes('admin')) location.replace('/admin');
   else await client.auth.signOut();
 }
 
@@ -80,5 +80,5 @@ $('#company-login').addEventListener('submit', async event => {
     return;
   }
 
-  location.replace('admin.html');
+  location.replace('/admin');
 });

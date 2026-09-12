@@ -1,6 +1,6 @@
 const CACHE = 'img-tech-shell-v3';
 const SHELL = [
-  '/login',
+  '/PainelIMG',
   '/admin.css',
   '/admin-future.css',
   '/admin-stock.css',

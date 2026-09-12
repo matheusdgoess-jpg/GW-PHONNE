@@ -2,7 +2,7 @@
   "name": "IMG TECH Gestão",
   "short_name": "Central IMG",
   "description": "Gestão de vendas, estoque e assistência técnica da IMG TECH.",
-  "start_url": "/login",
+  "start_url": "/PainelIMG",
   "scope": "/",
   "display": "standalone",
   "background_color": "#030817",

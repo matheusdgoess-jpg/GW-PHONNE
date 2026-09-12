@@ -158,7 +158,7 @@ function setupLiveSync() {
       try {
         await loadOperationalData();
         const refreshedMember = state.members.find(member => member.id === currentUserId);
-        if (!refreshedMember?.active) { await client.auth.signOut(); location.replace('login.html'); return; }
+        if (!refreshedMember?.active) { await client.auth.signOut(); location.replace('/PainelIMG'); return; }
         currentMember = refreshedMember;
         applyPermissions();
         renderAll();
@@ -640,7 +640,7 @@ function bindEvents(){
   $('#mobile-more').addEventListener('click',()=>toggleMobileMenu(true));
   $('#sidebar-overlay').addEventListener('click',()=>toggleMobileMenu(false));
   $('#theme-button').addEventListener('click',()=>{document.body.classList.toggle('light-mode');state.settings.theme=document.body.classList.contains('light-mode')?'light':'dark';if(hasRole('admin'))save();else localStorage.setItem('gw-team-theme',state.settings.theme)});
-  $('#logout').addEventListener('click',async()=>{await client.auth.signOut();location.replace('login.html')});
+  $('#logout').addEventListener('click',async()=>{await client.auth.signOut();location.replace('/PainelIMG')});
   $('#chart-period').addEventListener('change',event=>renderChart(+event.target.value));
   $('[data-search="sales"]').addEventListener('input',filterSales);$('#sales-filter').addEventListener('change',filterSales);
   $('[data-search="estimates"]').addEventListener('input',filterEstimates);$('#estimates-filter').addEventListener('change',filterEstimates);
@@ -706,21 +706,21 @@ async function bootstrap() {
   const { data: sessionData } = await client.auth.getSession();
   const session = sessionData.session;
   if (!session) {
-    location.replace('login.html');
+    location.replace('/PainelIMG');
     return;
   }
   currentUserId = session.user.id;
   const { data: memberData, error: memberError } = await client.from('team_members').select('*').eq('user_id', currentUserId).single();
   if (memberError || !memberData?.active) {
     await client.auth.signOut();
-    document.body.innerHTML = '<main style="min-height:100vh;display:grid;place-items:center;background:#080808;color:#fff;font-family:sans-serif;text-align:center;padding:24px"><div><h1>Acesso não autorizado</h1><p>Seu usuário não pertence à equipe ativa da IMG TECH. Fale com o ADM Geral.</p><a href="login.html" style="color:#ef4038">Voltar ao login</a></div></main>';
+    document.body.innerHTML = '<main style="min-height:100vh;display:grid;place-items:center;background:#080808;color:#fff;font-family:sans-serif;text-align:center;padding:24px"><div><h1>Acesso não autorizado</h1><p>Seu usuário não pertence à equipe ativa da IMG TECH. Fale com o ADM Geral.</p><a href="/PainelIMG" style="color:#ef4038">Voltar ao login</a></div></main>';
     return;
   }
   currentMember = { id:memberData.user_id, name:memberData.name, email:memberData.email, roles:memberData.roles||[], active:memberData.active };
   if (hasRole('admin')) {
     const { data, error } = await client.from('manager_state').select('data').eq('id', 1).single();
     if (error && error.code !== 'PGRST116') {
-      document.body.innerHTML = '<main style="min-height:100vh;display:grid;place-items:center;background:#080808;color:#fff;font-family:sans-serif;text-align:center;padding:24px"><div><h1>Não foi possível carregar o painel</h1><p>Atualize a página ou verifique a conexão com a internet.</p><a href="login.html" style="color:#ef4038">Voltar ao login</a></div></main>';
+      document.body.innerHTML = '<main style="min-height:100vh;display:grid;place-items:center;background:#080808;color:#fff;font-family:sans-serif;text-align:center;padding:24px"><div><h1>Não foi possível carregar o painel</h1><p>Atualize a página ou verifique a conexão com a internet.</p><a href="/PainelIMG" style="color:#ef4038">Voltar ao login</a></div></main>';
       return;
     }
     if (data?.data) state = { ...structuredClone(seed), ...data.data, settings: { ...seed.settings, ...(data.data.settings || {}) }, public: { ...seed.public, ...(data.data.public || {}) } };

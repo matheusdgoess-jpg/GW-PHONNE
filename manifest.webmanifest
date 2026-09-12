@@ -1,0 +1,14 @@
+{
+  "name": "IMG TECH Gestão",
+  "short_name": "Central IMG",
+  "description": "Gestão de vendas, estoque e assistência técnica da IMG TECH.",
+  "start_url": "/login",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#030817",
+  "theme_color": "#071b3d",
+  "icons": [
+    { "src": "/assets/img-tech-logo-v2.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
+

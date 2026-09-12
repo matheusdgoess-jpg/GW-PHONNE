@@ -3,16 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@vercel/blob": "^2.7.0",
-    "jose": "^6.2.8",
-    "next": "^16.3.0",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "test": "node --check script.js && node --check login.js && node --check admin.js",
+    "dev": "npx serve .",
+    "deploy": "vercel --prod"
   }
 }

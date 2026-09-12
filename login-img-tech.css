@@ -1,0 +1,8 @@
+:root{--black:#050913;--panel:#081423;--cream:#f3f8ff;--red:#00d9ff;--muted:#8295ae;--line:rgba(116,172,255,.16);--cyan:#4ce9ff}
+.brand-side{background:radial-gradient(circle at 64% 73%,rgba(36,83,255,.31),transparent 24%),linear-gradient(145deg,#050913,#071426)}
+.brand img{border-radius:14px;box-shadow:0 0 34px rgba(0,217,255,.24)}.brand small{color:#55e2ff}
+.brand-copy em{background:linear-gradient(100deg,#00d9ff,#7770ff);background-clip:text;color:transparent}.brand-copy>span,.access-badge{color:#4ee5ff}
+.orb{border-color:rgba(0,217,255,.22)}.orb-one{box-shadow:0 0 0 90px rgba(0,217,255,.025),0 0 0 180px rgba(85,91,255,.018)}
+.form-side{background:radial-gradient(circle at 50% 50%,#0d1b30,#050912 72%)}.login-card{background:linear-gradient(145deg,rgba(12,28,49,.92),rgba(6,14,27,.96))}
+.login-card:before{background:linear-gradient(135deg,rgba(0,217,255,.24),transparent 36%,rgba(93,85,255,.2))}.input-wrap{background:#071321}.input-wrap:focus-within{border-color:rgba(0,217,255,.65);box-shadow:0 0 0 3px rgba(0,217,255,.09)}
+.login-button{color:#03131b;background:linear-gradient(105deg,#00d9ff,#6275ff);box-shadow:0 15px 38px rgba(0,170,255,.19)}.login-button:hover{box-shadow:0 18px 44px rgba(0,170,255,.28)}

@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#050913">
+  <meta name="robots" content="noindex,nofollow">
+  <title>IMG TECH Gestão | Central técnica</title>
+  <link rel="icon" type="image/png" href="assets/img-tech-logo-v2.png?v=3">
+  <link rel="apple-touch-icon" href="assets/img-tech-logo-v2.png?v=3">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="admin-future.css">
+  <link rel="stylesheet" href="admin-stock.css">
+  <link rel="stylesheet" href="admin-img-tech.css?v=20260912b">
+</head>
+<body>
+  <div class="app" id="app" hidden>
+    <aside class="sidebar">
+      <a class="side-brand" href="#dashboard"><img src="assets/img-tech-logo-v2.png" alt="Logo IMG TECH"><div>IMG <b>TECH</b><small>CENTRAL TÉCNICA</small></div></a>
+      <nav id="side-nav">
+        <small class="nav-section">VISÃO</small>
+        <button class="nav-item active" data-page="dashboard"><span>⌂</span>Visão geral</button>
+        <small class="nav-section">ATENDIMENTO</small>
+        <button class="nav-item" data-page="orders"><span>◇</span>Ordens de serviço<b class="nav-count" id="open-orders-count">0</b></button>
+        <button class="nav-item" data-page="clients"><span>◎</span>Clientes</button>
+        <button class="nav-item" data-page="devices"><span>▣</span>Dispositivos</button>
+        <button class="nav-item" data-page="tasks"><span>✓</span>Agenda & tarefas<b class="nav-count" id="tasks-count">0</b></button>
+        <small class="nav-section">FINANCEIRO</small>
+        <button class="nav-item" data-page="sales"><span>↗</span>Vendas</button>
+        <button class="nav-item" data-page="estimates"><span>▤</span>Orçamentos</button>
+        <button class="nav-item" data-page="finance"><span>◌</span>Financeiro</button>
+        <small class="nav-section">OPERAÇÃO</small>
+        <button class="nav-item" data-page="crm"><span>◉</span>Pós-venda</button>
+        <button class="nav-item" data-page="inventory"><span>□</span>Estoque</button>
+        <button class="nav-item" data-page="suppliers"><span>♢</span>Fornecedores</button>
+        <button class="nav-item" data-page="tools"><span>⌁</span>Ferramentas</button>
+        <small class="nav-section">GESTÃO</small>
+        <button class="nav-item" data-page="portfolio"><span>▧</span>Resultados públicos</button>
+        <button class="nav-item" data-page="site"><span>◉</span>Site público</button>
+      </nav>
+      <div class="side-bottom">
+        <button class="nav-item" data-page="settings"><span>⚙</span>Configurações</button>
+        <div class="manager"><div class="avatar" id="manager-avatar">G</div><div><b id="manager-display">Gestor</b><small>Administrador</small></div><button id="logout" title="Sair">↪</button></div>
+      </div>
+    </aside>
+    <button class="sidebar-overlay" id="sidebar-overlay" aria-label="Fechar menu"></button>
+
+    <main class="main">
+      <header class="top-header">
+        <button class="mobile-menu" id="mobile-menu" aria-label="Abrir menu">☰</button>
+        <div><span id="today-label"></span><h1 id="page-title">Visão geral</h1></div>
+        <div class="top-actions"><button class="command-button" id="command-button"><span>⌘</span> Ação rápida <kbd>Ctrl K</kbd></button><button class="icon-button" id="theme-button" title="Alternar tema">◐</button><button class="primary" data-open="sale">+ Nova venda</button><button class="primary red" data-open="order">+ Nova OS</button></div>
+      </header>
+
+      <section class="page active" id="page-dashboard">
+        <div class="motivation-card">
+          <div><span>RECADO DO DIA</span><blockquote id="daily-message"></blockquote><small id="daily-author">IMG TECH</small></div>
+          <div class="goal-ring" id="goal-ring"><div><b id="goal-percent">0%</b><span>da meta mensal</span></div></div>
+        </div>
+        <div class="kpi-grid">
+          <article class="kpi"><div class="kpi-icon red">↗</div><span>Vendas hoje</span><strong id="sales-today">R$ 0</strong><small id="sales-today-count">0 vendas</small></article>
+          <article class="kpi"><div class="kpi-icon gold">◫</div><span>Vendas na semana</span><strong id="sales-week">R$ 0</strong><small id="sales-week-count">0 vendas</small></article>
+          <article class="kpi"><div class="kpi-icon green">◇</div><span>Lucro no mês</span><strong id="profit-month">R$ 0</strong><small id="profit-margin">0% de margem</small></article>
+          <article class="kpi"><div class="kpi-icon blue">◎</div><span>Clientes ativos</span><strong id="clients-total">0</strong><small id="clients-new">0 novos no mês</small></article>
+        </div>
+        <div class="dashboard-grid">
+          <article class="panel chart-panel"><div class="panel-head"><div><span>DESEMPENHO</span><h2>Vendas e lucro</h2></div><select id="chart-period"><option value="7">Últimos 7 dias</option><option value="30">Últimos 30 dias</option></select></div><div class="legend"><i class="sales"></i>Vendas <i class="profit"></i>Lucro</div><svg id="performance-chart" viewBox="0 0 700 260" preserveAspectRatio="none" aria-label="Gráfico de vendas e lucro"></svg></article>
+          <article class="panel target-panel"><div class="panel-head"><div><span>OBJETIVO DO MÊS</span><h2>Meta de faturamento</h2></div><button class="text-button" data-page-link="settings">Editar</button></div><div class="target-value"><strong id="target-current">R$ 0</strong><span>de <b id="target-total">R$ 0</b></span></div><div class="progress"><i id="target-progress"></i></div><p id="target-remaining"></p><div class="target-stats"><div><span>Ticket médio</span><b id="average-ticket">R$ 0</b></div><div><span>Projeção</span><b id="projection">R$ 0</b></div></div></article>
+        </div>
+        <div class="dashboard-grid lower">
+          <article class="panel"><div class="panel-head"><div><span>ACOMPANHAMENTO</span><h2>Ordens recentes</h2></div><button class="text-button" data-page-link="orders">Ver todas →</button></div><div class="compact-list" id="recent-orders"></div></article>
+          <article class="panel"><div class="panel-head"><div><span>ÚLTIMAS MOVIMENTAÇÕES</span><h2>Vendas recentes</h2></div><button class="text-button" data-page-link="sales">Ver todas →</button></div><div class="compact-list" id="recent-sales"></div></article>
+        </div>
+        <div class="insight-grid" id="insight-grid"></div>
+        <div class="dashboard-grid operation-grid"><article class="panel"><div class="panel-head"><div><span>CENTRAL DE AÇÕES</span><h2>Próximos passos</h2></div><button class="text-button" data-page-link="tasks">Abrir agenda →</button></div><div class="task-preview" id="task-preview"></div></article><article class="panel radar-panel"><div class="panel-head"><div><span>RADAR IMG</span><h2>Saúde da operação</h2></div><span class="live-pill">● AO VIVO</span></div><div class="radar-list" id="business-radar"></div></article></div>
+      </section>
+
+      <section class="page" id="page-sales"><div class="page-tools"><div><span>COMERCIAL</span><h2>Registro de vendas</h2><p>Acompanhe aparelhos, vendedores, garantia, pagamentos e margem.</p></div><button class="primary red" data-open="sale">+ Registrar venda</button></div><div class="summary-strip" id="sales-summary"></div><div class="panel table-panel"><div class="table-tools"><input class="search" data-search="sales" placeholder="Buscar cliente, produto ou vendedor..."><select id="sales-filter"><option value="all">Todas as formas</option><option>Pix</option><option>Cartão</option><option>Dinheiro</option><option>Troca + volta</option></select></div><div class="table-wrap"><table><thead><tr><th>Data</th><th>Cliente</th><th>Produto</th><th>Vendedor</th><th>Pagamento</th><th>Venda</th><th>Lucro</th><th></th></tr></thead><tbody id="sales-table"></tbody></table></div></div></section>
+
+      <section class="page" id="page-estimates"><div class="page-tools"><div><span>PROPOSTAS</span><h2>Orçamentos</h2><p>Crie propostas profissionais, acompanhe aprovações e imprima para o cliente.</p></div><button class="primary red" data-open="estimate">+ Novo orçamento</button></div><div class="summary-strip" id="estimates-summary"></div><div class="panel table-panel"><div class="table-tools"><input class="search" data-search="estimates" placeholder="Buscar cliente, aparelho ou serviço..."><select id="estimates-filter"><option value="all">Todos os status</option><option value="rascunho">Rascunho</option><option value="enviado">Enviado</option><option value="aprovado">Aprovado</option><option value="recusado">Recusado</option></select></div><div class="table-wrap"><table><thead><tr><th>Nº</th><th>Cliente</th><th>Aparelho</th><th>Validade</th><th>Valor</th><th>Status</th><th>Ações</th></tr></thead><tbody id="estimates-table"></tbody></table></div></div></section>
+
+      <section class="page" id="page-orders"><div class="page-tools"><div><span>CENTRAL TÉCNICA</span><h2>Ordens de serviço</h2><p>Visão completa do recebimento à entrega, com rastreabilidade e segurança.</p></div><button class="primary red" data-open="order">+ Abrir nova OS</button></div><div class="summary-strip" id="orders-summary"></div><div class="order-toolbar panel"><input class="search" id="order-search" placeholder="Buscar OS, cliente, aparelho ou IMEI..."><select id="orders-filter"><option value="ativas">OS ativas</option><option value="all">Todas as OS</option><option value="recebido">Recebidas</option><option value="diagnostico">Em diagnóstico</option><option value="reparo">Em reparo</option><option value="pronto">Prontas</option><option value="entregue">Entregues</option></select><div class="view-switch"><button class="active" type="button" data-order-view="kanban">Quadro</button><button type="button" data-order-view="list">Lista</button></div></div><div class="kanban" id="orders-kanban"></div><div class="panel table-panel" id="orders-list" hidden><div class="table-wrap"><table><thead><tr><th>OS</th><th>Cliente</th><th>Aparelho</th><th>Serviço</th><th>Previsão</th><th>Status</th><th>Ações</th></tr></thead><tbody id="orders-table"></tbody></table></div></div></section>
+
+      <section class="page" id="page-clients"><div class="page-tools"><div><span>RELACIONAMENTO</span><h2>Base de clientes</h2><p>Histórico de compras e serviços em um só lugar.</p></div><button class="primary red" data-open="client">+ Novo cliente</button></div><div class="panel"><div class="table-tools"><input class="search" data-search="clients" placeholder="Buscar por nome ou telefone..."><span id="client-count-label"></span></div><div class="client-grid" id="clients-grid"></div></div></section>
+
+      <section class="page" id="page-crm"><div class="page-tools"><div><span>RELACIONAMENTO</span><h2>Pós-venda</h2><p>Organize retornos, avaliações e contatos que geram novas oportunidades.</p></div><button class="primary red" data-open="followup">+ Agendar contato</button></div><div class="summary-strip" id="crm-summary"></div><div class="panel table-panel"><div class="table-tools"><input class="search" data-search="crm" placeholder="Buscar cliente ou mensagem..."><select id="crm-filter"><option value="all">Todos</option><option value="pendente">Pendentes</option><option value="concluido">Concluídos</option></select></div><div class="table-wrap"><table><thead><tr><th>Data</th><th>Cliente</th><th>Canal</th><th>Mensagem</th><th>Status</th><th>Ações</th></tr></thead><tbody id="crm-table"></tbody></table></div></div></section>
+
+      <section class="page" id="page-inventory"><div class="page-tools"><div><span>CONTROLE</span><h2>Estoque inteligente</h2><p>Produtos e peças com alerta de reposição.</p></div><button class="primary red" data-open="inventory">+ Adicionar item</button></div><div class="inventory-alert" id="inventory-alert"></div><div class="panel table-panel"><div class="table-tools"><input class="search" data-search="inventory" placeholder="Buscar no estoque..."><select id="inventory-filter"><option value="all">Todas as categorias</option><option>Aparelho</option><option>Peça</option><option>Acessório</option></select></div><div class="table-wrap"><table><thead><tr><th>Item</th><th>Categoria</th><th>Quantidade</th><th>Custo</th><th>Preço</th><th>Status</th><th></th></tr></thead><tbody id="inventory-table"></tbody></table></div></div></section>
+
+      <section class="page" id="page-devices"><div class="page-tools"><div><span>RASTREABILIDADE</span><h2>Registro de dispositivos</h2><p>Controle cada aparelho individualmente, do recebimento à venda.</p></div><button class="primary red" data-open="device">+ Cadastrar dispositivo</button></div><div class="summary-strip" id="devices-summary"></div><div class="panel table-panel"><div class="table-tools"><input class="search" data-search="devices" placeholder="Buscar modelo, IMEI ou número de série..."><select id="devices-filter"><option value="all">Todos os status</option><option value="estoque">Em estoque</option><option value="reservado">Reservado</option><option value="vendido">Vendido</option><option value="assistencia">Na assistência</option><option value="defeito">Com defeito</option></select></div><div class="table-wrap"><table class="devices-table"><thead><tr><th>Dispositivo</th><th>IMEI / Série</th><th>Condição</th><th>Bateria</th><th>Compra</th><th>Venda</th><th>Status</th><th>Ações</th></tr></thead><tbody id="devices-table"></tbody></table></div></div></section>
+
+      <section class="page" id="page-suppliers"><div class="page-tools"><div><span>COMPRAS</span><h2>Fornecedores</h2><p>Centralize contatos de aparelhos, peças, acessórios e serviços.</p></div><button class="primary red" data-open="supplier">+ Novo fornecedor</button></div><div class="panel table-panel"><div class="table-tools"><input class="search" data-search="suppliers" placeholder="Buscar fornecedor, contato ou documento..."><span id="suppliers-count"></span></div><div class="table-wrap"><table><thead><tr><th>Fornecedor</th><th>Documento</th><th>Contato</th><th>Telefone</th><th>E-mail</th><th></th></tr></thead><tbody id="suppliers-table"></tbody></table></div></div></section>
+
+      <section class="page" id="page-finance"><div class="page-tools"><div><span>INTELIGÊNCIA FINANCEIRA</span><h2>Fluxo financeiro</h2><p>Custos, despesas, contas e resultado real do negócio.</p></div><div class="page-actions"><button class="secondary" data-open="financeEntry">+ Conta</button><button class="primary red" data-open="expense">+ Despesa</button></div></div><div class="summary-strip" id="finance-summary"></div><div class="dashboard-grid"><article class="panel"><div class="panel-head"><div><span>SAÍDAS</span><h2>Despesas registradas</h2></div></div><div class="table-wrap"><table><thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Valor</th><th></th></tr></thead><tbody id="expenses-table"></tbody></table></div></article><article class="panel"><div class="panel-head"><div><span>FECHAMENTO</span><h2>Caixa do dia</h2></div></div><div class="cash-closing" id="cash-closing"></div><button class="secondary full-width" id="copy-closing">Copiar resumo do fechamento</button></article></div><article class="panel table-panel finance-ledger"><div class="panel-head"><div><span>AGENDA FINANCEIRA</span><h2>Contas a pagar e receber</h2></div></div><div class="table-wrap"><table><thead><tr><th>Vencimento</th><th>Tipo</th><th>Descrição</th><th>Categoria</th><th>Valor</th><th>Status</th><th>Ações</th></tr></thead><tbody id="financial-entries-table"></tbody></table></div></article></section>
+
+      <section class="page" id="page-tools"><div class="page-tools"><div><span>FERRAMENTAS IMG</span><h2>Simulador de upgrade</h2><p>Monte uma proposta de troca com margem segura em poucos segundos.</p></div></div><div class="tools-layout"><form class="panel upgrade-form" id="upgrade-form"><div class="panel-head"><div><span>AVALIAÇÃO</span><h2>Dados da negociação</h2></div></div><label>Valor do aparelho novo<input name="newPrice" type="number" min="0" step=".01" required></label><label>Valor de mercado do usado<input name="usedMarket" type="number" min="0" step=".01" required></label><label>Margem de segurança no usado (%)<input name="safetyMargin" type="number" min="0" max="100" value="20"></label><label>Custos previstos no usado<input name="repairCost" type="number" min="0" step=".01" value="0"></label><button class="primary red" type="submit">Calcular proposta</button></form><article class="panel upgrade-result" id="upgrade-result"><span>RESULTADO</span><h2>Preencha os valores</h2><p>O simulador mostrará quanto oferecer no aparelho usado e a diferença que o cliente deverá pagar.</p></article></div></section>
+
+      <section class="page" id="page-tasks"><div class="page-tools"><div><span>ORGANIZAÇÃO</span><h2>Agenda & tarefas</h2><p>Lembretes, retornos de clientes e prioridades da equipe.</p></div><button class="primary red" data-open="task">+ Nova tarefa</button></div><div class="task-layout"><article class="panel"><div class="panel-head"><div><span>HOJE E PRÓXIMOS DIAS</span><h2>Fila de prioridades</h2></div></div><div class="tasks-list" id="tasks-list"></div></article><article class="panel focus-panel"><span>MODO FOCO</span><h2>Uma prioridade por vez.</h2><p>Escolha a tarefa mais importante, conclua com excelência e avance.</p><div id="focus-task"></div></article></div></section>
+
+      <section class="page" id="page-team"><div class="page-tools"><div><span>GESTÃO DE ACESSOS</span><h2>Equipe IMG TECH</h2><p>Contas individuais, funções e histórico de responsabilidade.</p></div><button class="primary red" data-open="employee">+ Criar acesso</button></div><div class="summary-strip" id="team-summary"></div><div class="dashboard-grid team-layout"><article class="panel table-panel"><div class="panel-head"><div><span>INTEGRANTES</span><h2>Acessos e funções</h2></div></div><div class="table-wrap"><table><thead><tr><th>Funcionário</th><th>Funções</th><th>Status</th><th>Última atividade</th><th></th></tr></thead><tbody id="team-table"></tbody></table></div></article><article class="panel role-matrix"><div class="panel-head"><div><span>PERMISSÕES</span><h2>Funções da equipe</h2></div></div><div><b>ADM Geral</b><p>Controle completo, financeiro, catálogo, configurações, acessos e auditoria.</p></div><div><b>Vendedor</b><p>Clientes, vendas, consulta de estoque, agenda e acompanhamento das ordens.</p></div><div><b>Técnico</b><p>Clientes, ordens de serviço, estoque, checklist, autorizações e tarefas.</p></div></article></div><article class="panel activity-panel"><div class="panel-head"><div><span>RASTREABILIDADE</span><h2>Histórico da equipe</h2></div></div><div id="team-activity"></div></article></section>
+
+      <section class="page" id="page-portfolio">
+        <div class="page-tools"><div><span>VITRINE DE RESULTADOS</span><h2>Reparos publicados</h2><p>Mostre no site público aparelhos reparados e funcionando após o serviço.</p></div><a class="secondary" href="index.html#resultados" target="_blank">Ver no site ↗</a></div>
+        <div class="portfolio-layout">
+          <form class="panel portfolio-form" id="portfolio-form">
+            <div class="panel-head"><div><span>NOVO RESULTADO</span><h2>Publicar reparo</h2></div></div>
+            <label>Imagem do aparelho<input name="image" type="file" accept="image/jpeg,image/png,image/webp" required><small>JPG, PNG ou WebP, até 8 MB. Não envie dados pessoais.</small></label>
+            <div class="form-columns"><label>Título<input name="title" maxlength="80" placeholder="Ex.: iPhone 13 recuperado" required></label><label>Modelo<input name="deviceModel" maxlength="80" placeholder="Ex.: iPhone 13" required></label></div>
+            <label>Reparo realizado<input name="repairType" maxlength="100" placeholder="Ex.: Substituição de tela" required></label>
+            <label>Descrição<textarea name="description" rows="4" maxlength="300" placeholder="Conte o resultado do reparo sem expor dados do cliente."></textarea></label>
+            <div class="form-columns"><label>Ordem de exibição<input name="sortOrder" type="number" min="0" value="100"></label><label class="check-row"><input name="published" type="checkbox" checked> Publicar imediatamente</label></div>
+            <button class="primary red" type="submit">Enviar e publicar</button><p class="form-feedback" id="portfolio-feedback"></p>
+          </form>
+          <section><div class="portfolio-heading"><div><span>GALERIA</span><h2>Resultados cadastrados</h2></div><b id="portfolio-count">0 itens</b></div><div class="portfolio-admin-grid" id="portfolio-admin-grid"></div></section>
+        </div>
+      </section>
+
+      <section class="page" id="page-site">
+        <div class="page-tools"><div><span>CONTEÚDO</span><h2>Informações do site público</h2><p>Atualize contatos, horários, catálogo e mensagem principal da IMG TECH.</p></div><a class="secondary" href="index.html" target="_blank">Visualizar site ↗</a></div>
+        <form class="settings-grid" id="site-form"><article class="panel form-card"><div class="panel-head"><div><span>CONTATO</span><h2>Loja e assistência</h2></div></div><label>WhatsApp da loja<input name="storePhone"></label><label>WhatsApp do técnico<input name="techPhone"></label><label>Instagram<input name="instagram"></label><label>Endereço<input name="address"></label></article><article class="panel form-card"><div class="panel-head"><div><span>ATENDIMENTO</span><h2>Horários</h2></div></div><label>Segunda a sexta<input name="weekdays"></label><label>Sábado<input name="saturday"></label><label>Domingo<input name="sunday"></label><label>Mensagem principal<textarea name="headline" rows="3"></textarea></label></article><button class="primary red form-save" type="submit">Salvar alterações no site</button><p class="form-feedback" id="site-feedback"></p></form>
+        <div class="page-tools catalog-admin-head"><div><span>CATÁLOGO</span><h2>Aparelhos publicados</h2><p>Controle o que aparece para os clientes em tempo real.</p></div><button class="primary red" data-open="catalog">+ Adicionar aparelho</button></div>
+        <div class="panel table-panel"><div class="table-wrap"><table><thead><tr><th>Aparelho</th><th>Condição</th><th>Ordem</th><th>Visibilidade</th><th></th></tr></thead><tbody id="catalog-admin-table"></tbody></table></div></div>
+      </section>
+
+      <section class="page" id="page-settings"><div class="page-tools"><div><span>PREFERÊNCIAS</span><h2>Configurações</h2><p>Defina metas, proteção e comportamento do painel.</p></div></div><form class="settings-grid" id="settings-form"><article class="panel form-card"><h2>Metas do negócio</h2><label>Meta mensal de faturamento (R$)<input name="monthlyGoal" type="number" min="0"></label><label>Meta de margem de lucro (%)<input name="marginGoal" type="number" min="0" max="100"></label><label>Meta mensal de vendas<input name="salesGoal" type="number" min="0"></label></article><article class="panel form-card"><h2>Perfil gestor</h2><label>Nome de exibição<input name="managerName"></label><label>Nome do negócio<input name="businessName"></label><label><input type="checkbox" name="sound"> Sons de confirmação</label><button type="button" class="secondary" id="export-data">Baixar backup da operação</button><button type="button" class="danger-link" id="reset-data">Apagar dados operacionais</button></article><button class="primary red form-save" type="submit">Salvar configurações</button></form></section>
+    </main>
+    <nav class="mobile-bottom-nav" aria-label="Atalhos principais">
+      <button class="mobile-nav-item active" data-page="dashboard"><span>⌂</span><small>Início</small></button>
+      <button class="mobile-nav-item" data-page="sales"><span>↗</span><small>Vendas</small></button>
+      <button class="mobile-nav-item" data-page="orders"><span>◇</span><small>OS</small></button>
+      <button class="mobile-nav-item" data-page="devices"><span>▣</span><small>Dispositivos</small></button>
+      <button class="mobile-nav-item" id="mobile-more" type="button"><span>☰</span><small>Menu</small></button>
+    </nav>
+  </div>
+
+  <dialog id="record-dialog"><form method="dialog" class="dialog-form" id="record-form"><div class="dialog-head"><div><span id="dialog-kicker">NOVO REGISTRO</span><h2 id="dialog-title">Registrar</h2></div><button class="dialog-close" type="button" data-close-record aria-label="Fechar">×</button></div><div id="dialog-fields"></div><div class="dialog-actions"><button class="secondary" type="button" data-close-record>Cancelar</button><button class="primary red" value="default" id="dialog-save">Salvar registro</button></div></form></dialog>
+  <dialog id="command-dialog"><div class="command-palette"><div class="command-search"><span>⌘</span><input id="command-search" placeholder="O que você deseja fazer?"><kbd>ESC</kbd></div><div class="command-results"><button data-command="sale"><span>↗</span><div><b>Registrar venda</b><small>Adicionar uma movimentação comercial</small></div></button><button data-command="order"><span>◇</span><div><b>Abrir ordem de serviço</b><small>Receber um aparelho na assistência</small></div></button><button data-command="device"><span>▣</span><div><b>Cadastrar dispositivo</b><small>Registrar IMEI, série e detalhes do aparelho</small></div></button><button data-command="client"><span>◎</span><div><b>Cadastrar cliente</b><small>Adicionar à base de relacionamento</small></div></button><button data-command="task"><span>✓</span><div><b>Criar tarefa</b><small>Agendar retorno ou prioridade</small></div></button><button data-command="expense"><span>◌</span><div><b>Registrar despesa</b><small>Atualizar o resultado financeiro</small></div></button></div></div></dialog>
+  <div class="toast" id="toast"><span>✓</span><div><b>Registro salvo</b><small></small></div></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
+  <script src="supabase-config.js"></script>
+  <script src="warranty-terms.js"></script>
+  <script src="admin.js?v=20260912b"></script>
+</body>
+</html>

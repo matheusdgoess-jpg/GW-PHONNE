@@ -8,11 +8,10 @@
   "trailingSlash": false,
   "redirects": [
     { "source": "/%23inicio", "destination": "/", "permanent": true },
-    { "source": "/gestao", "destination": "/PainelIMG", "permanent": false },
-    { "source": "/login", "destination": "/PainelIMG", "permanent": false }
+    { "source": "/gestao", "destination": "/PainelIMG", "permanent": false }
   ],
   "rewrites": [
-    { "source": "/PainelIMG", "destination": "/login.html" }
+    { "source": "/PainelIMG", "destination": "/login" }
   ],
   "headers": [
     {

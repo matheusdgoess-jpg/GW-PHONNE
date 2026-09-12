@@ -7,6 +7,7 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
+    { "source": "/%23inicio", "destination": "/", "permanent": true },
     { "source": "/gestao", "destination": "/login", "permanent": false }
   ],
   "headers": [

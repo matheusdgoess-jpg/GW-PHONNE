@@ -18,8 +18,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js">
+  <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260918-3">
+  <link rel="stylesheet" href="styles.css?v=20260918-4">
   <link rel="stylesheet" href="public-results.css?v=20260912">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"IMG TECH","description":"Assistência técnica especializada em iPhone.","url":"https://img-tech.vercel.app/","telephone":"+55 14 98132-8577","sameAs":["https://www.instagram.com/img_tecnico"]}</script>
 </head>
@@ -44,11 +45,11 @@
         <div class="hero-actions"><a class="button button-primary js-whatsapp" href="https://wa.me/5514981328577?text=Olá%2C%20vim%20pelo%20site%20da%20IMG%20TECH.%20Gostaria%20de%20solicitar%20um%20diagnóstico." target="_blank" rel="noreferrer">Solicitar diagnóstico <span>↗</span></a><a class="button button-ghost" href="#acompanhar-os">Acompanhar meu reparo</a></div>
         <div class="hero-trust"><span>Diagnóstico objetivo</span><span>Orçamento antes do reparo</span><span>Atendimento registrado</span></div>
       </div>
-      <div class="hero-visual reveal" aria-label="Smartphone aberto em camadas para reparo técnico">
-        <div class="hero-product-art">
-          <img class="hero-product-image" src="assets/img-tech-repair-hero-v3.png" alt="Smartphone premium aberto em camadas durante reparo técnico">
-          <img class="hero-screen-mark" src="assets/img-tech-logo-v2.png" alt="" aria-hidden="true">
-          <div class="hero-art-caption" aria-hidden="true"><i></i><span><b>Precisão técnica</b><small>do diagnóstico à entrega</small></span></div>
+      <div class="hero-visual reveal" aria-label="Experiência tridimensional interativa da IMG TECH">
+        <div class="hero-webgl-shell">
+          <img class="hero-webgl-fallback" src="assets/img-tech-logo-v2.png" alt="Logo IMG TECH">
+          <canvas id="iphone-3d" aria-hidden="true"></canvas>
+          <div class="hero-webgl-status" aria-hidden="true"><span>3D</span><p><b>Engenharia em movimento</b><small>Mova o cursor para explorar</small></p></div>
         </div>
       </div>
     </section>
@@ -98,6 +99,7 @@
   <a class="whatsapp-float js-whatsapp" href="https://wa.me/5514981328577?text=Olá%2C%20vim%20pelo%20site%20da%20IMG%20TECH%20e%20preciso%20de%20ajuda%20com%20meu%20iPhone." target="_blank" rel="noreferrer" aria-label="Falar com a IMG TECH no WhatsApp"><span>✦</span><b>Falar no WhatsApp</b></a>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
   <script src="supabase-config.js"></script>
+  <script type="module" src="iphone-3d.js?v=20260918-4"></script>
   <script src="script.js?v=20260918"></script>
 </body>
 </html>

@@ -11,8 +11,9 @@ if (stage && heroVisual && canvas && 'WebGLRenderingContext' in window) {
 function startScene(THREE) {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const compact = window.matchMedia('(max-width: 680px)').matches;
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !compact, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, compact ? 1.35 : 1.8));
+  const lowPower = compact || (navigator.deviceMemory && navigator.deviceMemory <= 4) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !lowPower, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, lowPower ? 1.05 : 1.5));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.65;
@@ -78,15 +79,17 @@ function startScene(THREE) {
   context.fillStyle = glow; context.fillRect(0, 0, 640, 1280);
   context.strokeStyle = 'rgba(73,224,255,.16)'; context.lineWidth = 2;
   for (let y = 80; y < 1280; y += 80) { context.beginPath(); context.moveTo(0, y); context.lineTo(640, y); context.stroke(); }
-  context.textAlign = 'center'; context.fillStyle = '#f6fbff'; context.font = '700 90px Arial'; context.fillText('IMG', 320, 630);
-  context.fillStyle = '#55dcff'; context.font = '600 39px Arial'; context.letterSpacing = '18px'; context.fillText('T E C H', 320, 705);
-  context.fillStyle = 'rgba(220,240,255,.65)'; context.font = '500 18px Arial'; context.fillText('PRECISÃO EM CADA CAMADA', 320, 765);
+  context.textAlign = 'center'; context.fillStyle = '#f6fbff'; context.font = '700 128px Arial'; context.fillText('IMG', 320, 610);
+  context.fillStyle = '#55dcff'; context.font = '600 46px Arial'; context.letterSpacing = '18px'; context.fillText('T E C H', 320, 690);
+  context.fillStyle = 'rgba(220,240,255,.78)'; context.font = '500 20px Arial'; context.fillText('PRECISÃO EM CADA CAMADA', 320, 752);
   const screenTexture = new THREE.CanvasTexture(screenCanvas);
   screenTexture.colorSpace = THREE.SRGBColorSpace;
 
   const display = roundedSolid(3.42, 7.02, 0.085, 0.4, new THREE.MeshBasicMaterial({ map: screenTexture, toneMapped: false }), .025);
   display.position.z = 0.12;
   device.add(display);
+  const displayGlow = new THREE.LineSegments(new THREE.EdgesGeometry(display.geometry, 18), new THREE.LineBasicMaterial({ color: 0x55ddff, transparent: true, opacity: .72 }));
+  display.add(displayGlow);
 
   const notch = roundedSolid(1.15, 0.25, 0.07, 0.13, glassMaterial, .015);
   notch.position.set(0, 3.05, 0.24);
@@ -128,7 +131,7 @@ function startScene(THREE) {
   scan.position.z = .3;
   device.add(scan);
 
-  const pointCount = compact ? 80 : 170;
+  const pointCount = lowPower ? 48 : 110;
   const positions = new Float32Array(pointCount * 3);
   for (let index = 0; index < pointCount; index += 1) {
     positions[index * 3] = (Math.random() - .5) * 11;
@@ -140,7 +143,7 @@ function startScene(THREE) {
   const particles = new THREE.Points(particleGeometry, new THREE.PointsMaterial({ color: 0x31cfff, size: .025, transparent: true, opacity: .65, blending: THREE.AdditiveBlending }));
   scene.add(particles);
 
-  let pointerX = 0, pointerY = 0, scrollProgress = 0, active = true;
+  let pointerX = 0, pointerY = 0, scrollProgress = Math.min(1, window.scrollY / Math.max(360, window.innerHeight * .58)), inViewport = true;
   stage.addEventListener('pointermove', event => {
     const rect = stage.getBoundingClientRect();
     pointerX = ((event.clientX - rect.left) / rect.width - .5) * 2;
@@ -149,7 +152,7 @@ function startScene(THREE) {
   stage.addEventListener('pointerleave', () => { pointerX = 0; pointerY = 0; }, { passive: true });
   window.addEventListener('scroll', () => { scrollProgress = Math.min(1, window.scrollY / Math.max(360, window.innerHeight * .58)); }, { passive: true });
 
-  const visibility = new IntersectionObserver(entries => { active = entries[0]?.isIntersecting ?? true; }, { rootMargin: '180px' });
+  const visibility = new IntersectionObserver(entries => { inViewport = entries[0]?.isIntersecting ?? true; }, { rootMargin: '180px' });
   visibility.observe(stage);
 
   const resize = () => {
@@ -162,9 +165,12 @@ function startScene(THREE) {
   resize();
 
   const clock = new THREE.Clock();
-  const animate = () => {
+  const frameInterval = 1000 / (lowPower ? 30 : 50);
+  let previousFrame = 0;
+  const animate = now => {
     requestAnimationFrame(animate);
-    if (!active) return;
+    if (!inViewport || document.hidden || now - previousFrame < frameInterval) return;
+    previousFrame = now;
     const time = clock.getElapsedTime();
     const movement = reducedMotion ? 0 : 1;
     device.rotation.y += ((-.36 + pointerX * .17) - device.rotation.y) * .045;
@@ -186,7 +192,7 @@ function startScene(THREE) {
     board.position.z += ((.05 + scrollProgress * 1.05) - board.position.z) * .055;
     board.position.x += ((1.02 + scrollProgress * .7) - board.position.x) * .055;
     chips.forEach(chip => { chip.position.x = board.position.x; chip.position.z = board.position.z + .14; });
-    cameraCluster.position.z = scrollProgress * .98;
+    cameraCluster.position.z = -.36 + scrollProgress * 1.2;
     scan.position.y = reducedMotion ? 0 : ((time * .82) % 6.2) - 3.1;
     scan.material.opacity = reducedMotion ? .5 : .45 + Math.sin(time * 3.2) * .35;
     particles.rotation.y = time * .018 * movement;
@@ -195,5 +201,5 @@ function startScene(THREE) {
   };
 
   heroVisual.classList.add('is-3d-ready');
-  animate();
+  requestAnimationFrame(animate);
 }

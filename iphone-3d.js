@@ -156,10 +156,11 @@ function startScene(THREE, RoundedBoxGeometry, RoomEnvironment) {
   const logo = new Image();
   logo.decoding = 'async';
   logo.onload = () => drawScreen(logo);
-  logo.addEventListener('load', () => {
-    const texture = new THREE.Texture(logo); texture.colorSpace=THREE.SRGBColorSpace; texture.needsUpdate=true;
-    const badge = new THREE.Mesh(new THREE.CircleGeometry(.59,64),new THREE.MeshBasicMaterial({map:texture}));
-    badge.rotation.y=Math.PI; badge.position.set(0,-.3,-.375); device.add(badge);
+  new THREE.TextureLoader().load('assets/apple-mark.svg', texture => {
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+    const badge = new THREE.Mesh(new THREE.PlaneGeometry(.98,.98),new THREE.MeshBasicMaterial({map:texture,transparent:true,depthWrite:false,toneMapped:false}));
+    badge.rotation.y=Math.PI; badge.position.set(0,-.15,-.38); device.add(badge);
   });
   logo.src = new URL('assets/img-tech-logo-v2.png', document.baseURI).href;
 

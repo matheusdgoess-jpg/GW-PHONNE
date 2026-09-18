@@ -1,0 +1,20 @@
+/* IMG TECH motion direction; SpotlightCard adapted from React Bits. */
+.hero-webgl-shell{inset:-22px -20px 30px;background:radial-gradient(ellipse at 50% 50%,#10264366,transparent 68%);box-shadow:none;border-radius:0}
+.hero-webgl-shell:before{border:0;box-shadow:none}
+.hero-webgl-shell.is-dragging{box-shadow:none}
+.hero-visual{height:620px}
+.hero-webgl-status{bottom:28px;left:24px;border:0;background:#07101caa}
+.hero-webgl-status small{font-size:12px;letter-spacing:.04em;color:#a5b7cd}
+.hero-webgl-status b{font-size:14px}
+.phone-views{position:absolute;bottom:0;left:50%;transform:translateX(-50%);display:flex;gap:6px;padding:5px;border:1px solid #ffffff18;border-radius:999px;background:#0b1526;z-index:5;white-space:nowrap}
+.phone-views button{border:0;background:transparent;border-radius:999px;padding:11px 18px;font-size:13px;color:#9daec4;cursor:pointer;transition:background .25s,color .25s}
+.phone-views button[aria-pressed=true]{background:#d8f7ff;color:#07111f}
+.phone-views button:focus-visible{outline:2px solid #00d9ff;outline-offset:3px}
+.repair-card:before{content:'';position:absolute;inset:0;background:radial-gradient(400px circle at var(--mouse-x,50%) var(--mouse-y,50%),#00d9ff26,transparent 80%);opacity:0;transition:opacity .5s;pointer-events:none}
+.repair-card:hover:before,.repair-card:focus-within:before{opacity:.8}
+.repair-card{border-radius:24px;background:#091322}
+.repair-card p{font-size:15px}.repair-code{font-size:12px}.repair-card a{font-size:14px}
+.hero:before{opacity:.4}.hero:after{background:radial-gradient(ellipse,#005cff0d,transparent 66%);border:0;box-shadow:none}
+.hero-copy>p{max-width:520px}.hero-trust span{font-size:12px}
+@media(min-width:1001px){.hero{padding-top:48px;padding-bottom:64px;gap:3vw;grid-template-columns:1.05fr .95fr}.hero h1{font-size:clamp(58px,6vw,94px)}}
+@media(max-width:680px){.hero-visual{height:480px}.hero-webgl-shell{inset:0 -10px 38px}.hero-webgl-status{left:12px;bottom:12px;padding:8px}.hero-webgl-status small{font-size:11px}.hero-webgl-status b{font-size:12px}.phone-views button{padding:11px 16px}.hero{gap:16px}}

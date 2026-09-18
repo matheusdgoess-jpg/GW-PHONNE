@@ -24,7 +24,7 @@ function startScene(THREE, RoundedBoxGeometry, RoomEnvironment) {
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(31, 1, .1, 100);
-  camera.position.set(0, .1, compact ? 17.2 : 15.7);
+  camera.position.set(0, .1, compact ? 20.2 : 19.5);
 
   const pmrem = new THREE.PMREMGenerator(renderer);
   const room = new RoomEnvironment();
@@ -45,11 +45,45 @@ function startScene(THREE, RoundedBoxGeometry, RoomEnvironment) {
 
   const device = new THREE.Group();
   scene.add(device);
+  // RoundedBoxGeometry clamps its radius to thickness. Extrude a rounded
+  // silhouette instead so thin iPhone glass retains properly curved corners.
+  const phoneShape = (width, height, depth, radius) => {
+    const s = new THREE.Shape();
+    const x = -width / 2, y = -height / 2, r = radius;
+    s.moveTo(x+r,y); s.lineTo(x+width-r,y);
+    s.quadraticCurveTo(x+width,y,x+width,y+r);
+    s.lineTo(x+width,y+height-r); s.quadraticCurveTo(x+width,y+height,x+width-r,y+height);
+    s.lineTo(x+r,y+height); s.quadraticCurveTo(x,y+height,x,y+height-r);
+    s.lineTo(x,y+r); s.quadraticCurveTo(x,y,x+r,y);
+    const g = new THREE.ExtrudeGeometry(s,{depth,bevelEnabled:true,bevelSegments:3,steps:1,bevelSize:.018,bevelThickness:.018,curveSegments:24});
+    g.translate(0,0,-depth/2);
+    const position=g.attributes.position, uv=g.attributes.uv;
+    for(let i=0;i<position.count;i++) uv.setXY(i,position.getX(i)/width+.5,position.getY(i)/height+.5);
+    return g;
+  };
 
   const frameMaterial = new THREE.MeshPhysicalMaterial({ color: 0x182b3d, metalness: .96, roughness: .18, clearcoat: 1, clearcoatRoughness: .09, envMapIntensity: 1.65 });
-  const frame = new THREE.Mesh(new RoundedBoxGeometry(4.12, 8.18, .52, 10, .38), frameMaterial);
+  const frame = new THREE.Mesh(phoneShape(4.12, 8.18, .42, .56), frameMaterial);
   frame.position.z = -.08;
   device.add(frame);
+  const rear = new THREE.Mesh(phoneShape(4,8.06,.045,.52),new THREE.MeshPhysicalMaterial({color:0x233c58,metalness:.38,roughness:.42,clearcoat:.55}));
+  rear.position.z = -.32;
+  device.add(rear);
+  const cameraPlate = new THREE.Mesh(phoneShape(2.02,2.12,.16,.4),new THREE.MeshStandardMaterial({color:0x294660,metalness:.55,roughness:.3}));
+  cameraPlate.position.set(.83,2.69,-.45);
+  device.add(cameraPlate);
+  [[1.3,3.23],[1.3,2.2],[.36,2.72]].forEach(([x,y])=>{
+    const mount = new THREE.Mesh(new THREE.CylinderGeometry(.43,.43,.16,64),frameMaterial);
+    mount.rotation.x = Math.PI/2; mount.position.set(x,y,-.59); device.add(mount);
+    const lens = new THREE.Mesh(new THREE.CylinderGeometry(.35,.35,.025,64),new THREE.MeshPhysicalMaterial({color:0x020714,metalness:.25,roughness:.08,clearcoat:1}));
+    lens.rotation.x = Math.PI/2; lens.position.set(x,y,-.69); device.add(lens);
+    const optic = new THREE.Mesh(new THREE.SphereGeometry(.17,32,16),new THREE.MeshPhysicalMaterial({color:0x12366c,metalness:.7,roughness:.14,clearcoat:1}));
+    optic.scale.z=.24; optic.position.set(x,y,-.72); device.add(optic);
+  });
+  [[.36,3.43,.14,0xffedc6],[.36,2.03,.11,0x040911]].forEach(([x,y,r,color])=>{
+    const dot=new THREE.Mesh(new THREE.SphereGeometry(r,24,16),new THREE.MeshStandardMaterial({color,roughness:.3}));
+    dot.scale.z=.2; dot.position.set(x,y,-.57); device.add(dot);
+  });
 
   const innerGlow = new THREE.Mesh(
     new RoundedBoxGeometry(3.88, 7.93, .18, 9, .33),
@@ -122,15 +156,20 @@ function startScene(THREE, RoundedBoxGeometry, RoomEnvironment) {
   const logo = new Image();
   logo.decoding = 'async';
   logo.onload = () => drawScreen(logo);
+  logo.addEventListener('load', () => {
+    const texture = new THREE.Texture(logo); texture.colorSpace=THREE.SRGBColorSpace; texture.needsUpdate=true;
+    const badge = new THREE.Mesh(new THREE.CircleGeometry(.59,64),new THREE.MeshBasicMaterial({map:texture}));
+    badge.rotation.y=Math.PI; badge.position.set(0,-.3,-.375); device.add(badge);
+  });
   logo.src = new URL('assets/img-tech-logo-v2.png', document.baseURI).href;
 
-  const screenMaterial = new THREE.MeshPhysicalMaterial({ map: screenTexture, color: 0xffffff, roughness: .065, metalness: .05, clearcoat: 1, clearcoatRoughness: .035, envMapIntensity: .72 });
-  const screen = new THREE.Mesh(new RoundedBoxGeometry(3.76, 7.8, .1, 10, .32), screenMaterial);
+  const screenMaterial = new THREE.MeshPhysicalMaterial({ map: screenTexture, emissiveMap:screenTexture, emissive:0xffffff, emissiveIntensity:.35, color: 0xffffff, roughness: .28, metalness: 0, clearcoat: .4, envMapIntensity: .12 });
+  const screen = new THREE.Mesh(phoneShape(3.88, 7.94, .055, .49), screenMaterial);
   screen.position.z = .37;
   device.add(screen);
 
   const island = new THREE.Mesh(
-    new RoundedBoxGeometry(1.2, .27, .08, 6, .13),
+    phoneShape(1.18, .32, .025, .16),
     new THREE.MeshPhysicalMaterial({ color: 0x000106, roughness: .08, metalness: .2, clearcoat: 1 })
   );
   island.position.set(0, 3.35, .47);
@@ -191,13 +230,20 @@ function startScene(THREE, RoundedBoxGeometry, RoomEnvironment) {
 
   let pointerX = 0;
   let pointerY = 0;
-  let manualYaw = 0;
+  let manualYaw = 2.85;
   let manualPitch = 0;
   let dragging = false;
   let pointerMoved = false;
   let previousPointerX = 0;
   let previousPointerY = 0;
   let exploded = false;
+  device.rotation.y = 2.51;
+  document.querySelectorAll('[data-phone-view]').forEach(button => button.addEventListener('click', () => {
+    const view=button.dataset.phoneView;
+    manualYaw=view==='back'?2.85:view==='repair'?-.65:0;
+    manualPitch=0; exploded=view==='repair';
+    document.querySelectorAll('[data-phone-view]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
+  }));
   let inViewport = true;
   stage.addEventListener('pointerdown', event => {
     dragging = true;
@@ -224,7 +270,7 @@ function startScene(THREE, RoundedBoxGeometry, RoomEnvironment) {
     }
   }, { passive: true });
   const finishPointer = event => {
-    if (dragging && !pointerMoved) exploded = !exploded;
+    if (event.type !== 'pointercancel' && dragging && !pointerMoved) exploded = !exploded;
     dragging = false;
     stage.classList.remove('is-dragging');
     canvas.releasePointerCapture?.(event.pointerId);

@@ -10,6 +10,60 @@
     }, {passive:true});
   });
   if(reduced) return;
+  const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const aurora = document.createElement('div');
+  aurora.className = 'img-aurora';
+  aurora.setAttribute('aria-hidden', 'true');
+  document.querySelector('.hero')?.prepend(aurora);
+  const progress = document.createElement('div');
+  progress.className = 'reading-progress';
+  progress.setAttribute('aria-hidden', 'true');
+  document.body.append(progress);
+  let scrollPending = false;
+  const updateScroll = () => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    progress.style.transform = `scaleX(${max > 0 ? Math.min(1, scrollY / max) : 0})`;
+    document.querySelector('.site-header')?.classList.toggle('header-scrolled', scrollY > 40);
+    scrollPending = false;
+  };
+  addEventListener('scroll', () => {
+    if (!scrollPending) { scrollPending = true; requestAnimationFrame(updateScroll); }
+  }, {passive:true});
+  addEventListener('resize', updateScroll, {passive:true});
+  updateScroll();
+  if (finePointer) {
+    document.querySelectorAll('.repair-card').forEach(card => {
+      card.addEventListener('pointermove', event => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--tilt-x', `${-(event.clientY-r.top-r.height/2)/r.height*7}deg`);
+        card.style.setProperty('--tilt-y', `${(event.clientX-r.left-r.width/2)/r.width*7}deg`);
+      }, {passive:true});
+      card.addEventListener('pointerleave', () => {card.style.setProperty('--tilt-x','0deg');card.style.setProperty('--tilt-y','0deg');});
+    });
+    document.querySelectorAll('.hero-actions .button, .contact-main').forEach(button => {
+      button.addEventListener('pointermove', event => {
+        const r=button.getBoundingClientRect();
+        button.style.translate=`${(event.clientX-r.left-r.width/2)*.06}px ${(event.clientY-r.top-r.height/2)*.1}px`;
+      }, {passive:true});
+      button.addEventListener('pointerleave',()=>{button.style.translate='0px 0px';});
+    });
+  }
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if(!entry.isIntersecting) return;
+        const element=entry.target;
+        element.animate([
+          {opacity:0,transform:'translateY(30px)',filter:'blur(5px)'},
+          {opacity:1,transform:'translateY(0)',filter:'blur(0)'}
+        ], {duration:750,delay:Number(element.dataset.motionDelay || 0),easing:'cubic-bezier(.2,.75,.2,1)',fill:'backwards'});
+        observer.unobserve(element);
+      });
+    }, {threshold:.12});
+    document.querySelectorAll('.repair-grid, .process-steps, .proof-strip').forEach(group => {
+      [...group.children].forEach((element,index) => {element.dataset.motionDelay=String((index%3)*90);observer.observe(element);});
+    });
+  }
   document.querySelectorAll('.hero h1').forEach(title => {
     title.animate([{opacity:0,filter:'blur(12px)',transform:'translateY(28px)'},{opacity:1,filter:'blur(0)',transform:'translateY(0)'}],{duration:1100,easing:'cubic-bezier(.2,.7,.2,1)'});
   });

@@ -1,4 +1,18 @@
 /* IMG TECH motion direction; SpotlightCard adapted from React Bits. */
+.img-aurora{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none;contain:paint}
+.img-aurora:before,.img-aurora:after{content:'';position:absolute;width:85%;height:90%;right:-25%;top:-15%;background:radial-gradient(ellipse,#007dff22,transparent 63%);transform-origin:center;animation:aurora-drift 16s ease-in-out infinite alternate}
+.img-aurora:after{right:0;top:30%;width:70%;height:70%;background:radial-gradient(ellipse,#833bff17,transparent 65%);animation-delay:-8s;animation-duration:21s}
+@keyframes aurora-drift{from{transform:translate(-6%,0) rotate(-15deg) scale(.9)}to{transform:translate(8%,12%) rotate(20deg) scale(1.2)}}
+.reading-progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:100;transform:scaleX(0);transform-origin:left;background:linear-gradient(90deg,#00d9ff,#7767ff);box-shadow:0 0 12px #00d9ff66;pointer-events:none}
+.site-header{transition:background .35s,box-shadow .35s}.site-header.header-scrolled{background:#050913f2;box-shadow:0 10px 38px #0003}
+.hero-actions .button,.contact-main{transition:translate .25s ease,transform .25s,box-shadow .25s}
+.button-primary{position:relative;overflow:hidden;isolation:isolate}.button-primary:after{content:'';position:absolute;inset:-100% -60%;background:linear-gradient(110deg,transparent 42%,#ffffff66 49%,transparent 56%);transform:translateX(-70%);pointer-events:none}.button-primary:hover:after,.button-primary:focus-visible:after{animation:button-sheen .8s ease-out}
+@keyframes button-sheen{to{transform:translateX(70%)}}
+.nav a{position:relative}.nav a:after{content:'';position:absolute;bottom:-9px;left:0;right:0;height:1px;background:#00d9ff;transform:scaleX(0);transform-origin:left;transition:transform .3s}.nav a:hover:after,.nav a:focus-visible:after{transform:scaleX(1)}
+.process-steps article{transition:border-color .3s,background .3s}.process-steps article:hover{border-color:#00d9ff77;background:linear-gradient(90deg,#00d9ff06,transparent)}
+.repair-icon{transition:transform .4s,box-shadow .4s}.repair-card:hover .repair-icon{transform:translateY(-4px) rotate(-5deg);box-shadow:0 10px 40px #00aaff30}
+@media(hover:hover) and (pointer:fine){.repair-card:hover{transform:perspective(1000px) rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg)) translateY(-4px)}}
+@media(prefers-reduced-motion:reduce){.img-aurora,.reading-progress{display:none}.button-primary:after{display:none}.repair-card:hover,.repair-card:hover .repair-icon{transform:none}.hero-actions .button,.contact-main{translate:none!important}.nav a:after{transition:none}}
 .hero-webgl-shell{inset:-22px -20px 30px;background:radial-gradient(ellipse at 50% 50%,#10264366,transparent 68%);box-shadow:none;border-radius:0}
 .hero-webgl-shell:before{border:0;box-shadow:none}
 .hero-webgl-shell.is-dragging{box-shadow:none}

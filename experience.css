@@ -1,4 +1,5 @@
 /* IMG TECH motion direction; SpotlightCard adapted from React Bits. */
+.motion-word{display:inline-block}
 .img-aurora{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none;contain:paint}
 .img-aurora:before,.img-aurora:after{content:'';position:absolute;width:85%;height:90%;right:-25%;top:-15%;background:radial-gradient(ellipse,#007dff22,transparent 63%);transform-origin:center;animation:aurora-drift 16s ease-in-out infinite alternate}
 .img-aurora:after{right:0;top:30%;width:70%;height:70%;background:radial-gradient(ellipse,#833bff17,transparent 65%);animation-delay:-8s;animation-duration:21s}

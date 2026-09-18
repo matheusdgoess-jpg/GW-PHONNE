@@ -246,6 +246,15 @@ function startScene(THREE, RoundedBoxGeometry, RoomEnvironment) {
     document.querySelectorAll('[data-phone-view]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
   }));
   let inViewport = true;
+  let scrollTurn = 0;
+  const updateScrollTurn = () => {
+    const hero = heroVisual.closest('.hero');
+    if (!hero || reducedMotion) return;
+    const bounds = hero.getBoundingClientRect();
+    scrollTurn = THREE.MathUtils.clamp(-bounds.top / Math.max(1,bounds.height),0,1) * .65;
+  };
+  window.addEventListener('scroll',updateScrollTurn,{passive:true});
+  updateScrollTurn();
   stage.addEventListener('pointerdown', event => {
     dragging = true;
     pointerMoved = false;
@@ -301,7 +310,7 @@ function startScene(THREE, RoundedBoxGeometry, RoomEnvironment) {
     const time = clock.getElapsedTime();
     const movement = reducedMotion ? 0 : 1;
     const autoYaw = Math.sin(time * .38) * .13 * movement;
-    const targetY = -.34 + autoYaw + pointerX * .38 + manualYaw;
+    const targetY = -.34 + autoYaw + pointerX * .38 + manualYaw + scrollTurn;
     const targetX = .08 + pointerY * .2 + manualPitch;
     device.rotation.y += (targetY - device.rotation.y) * .075;
     device.rotation.x += (targetX - device.rotation.x) * .075;

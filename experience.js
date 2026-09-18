@@ -49,6 +49,29 @@
     });
   }
   if ('IntersectionObserver' in window) {
+    const headingObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if(!entry.isIntersecting) return;
+        entry.target.querySelectorAll('.motion-word').forEach((word,index) => {
+          word.animate([{opacity:0,transform:'translateY(22px)',filter:'blur(5px)'},{opacity:1,transform:'translateY(0)',filter:'blur(0)'}],{duration:650,delay:index*55,easing:'cubic-bezier(.2,.75,.2,1)',fill:'backwards'});
+        });
+        headingObserver.unobserve(entry.target);
+      });
+    },{threshold:.5});
+    document.querySelectorAll('main h2').forEach(heading => {
+      const walker=document.createTreeWalker(heading,NodeFilter.SHOW_TEXT);
+      const nodes=[];
+      while(walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach(node=>{
+        const fragment=document.createDocumentFragment();
+        node.textContent.split(/(\s+)/).forEach(part=>{
+          if(!part.trim()) {fragment.append(document.createTextNode(part));return;}
+          const word=document.createElement('span'); word.className='motion-word';word.textContent=part;fragment.append(word);
+        });
+        node.replaceWith(fragment);
+      });
+      headingObserver.observe(heading);
+    });
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if(!entry.isIntersecting) return;

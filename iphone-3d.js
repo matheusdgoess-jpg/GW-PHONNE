@@ -191,13 +191,47 @@ function startScene(THREE, RoundedBoxGeometry, RoomEnvironment) {
 
   let pointerX = 0;
   let pointerY = 0;
+  let manualYaw = 0;
+  let manualPitch = 0;
+  let dragging = false;
+  let pointerMoved = false;
+  let previousPointerX = 0;
+  let previousPointerY = 0;
+  let exploded = false;
   let inViewport = true;
+  stage.addEventListener('pointerdown', event => {
+    dragging = true;
+    pointerMoved = false;
+    previousPointerX = event.clientX;
+    previousPointerY = event.clientY;
+    stage.classList.add('is-dragging');
+    canvas.setPointerCapture?.(event.pointerId);
+  });
   stage.addEventListener('pointermove', event => {
     const bounds = stage.getBoundingClientRect();
     pointerX = ((event.clientX - bounds.left) / bounds.width - .5) * 2;
     pointerY = ((event.clientY - bounds.top) / bounds.height - .5) * 2;
+    stage.style.setProperty('--pointer-x', `${((event.clientX - bounds.left) / bounds.width) * 100}%`);
+    stage.style.setProperty('--pointer-y', `${((event.clientY - bounds.top) / bounds.height) * 100}%`);
+    if (dragging) {
+      const deltaX = event.clientX - previousPointerX;
+      const deltaY = event.clientY - previousPointerY;
+      if (Math.abs(deltaX) + Math.abs(deltaY) > 2) pointerMoved = true;
+      manualYaw += deltaX * .009;
+      manualPitch = THREE.MathUtils.clamp(manualPitch + deltaY * .006, -.46, .46);
+      previousPointerX = event.clientX;
+      previousPointerY = event.clientY;
+    }
   }, { passive: true });
-  stage.addEventListener('pointerleave', () => { pointerX = 0; pointerY = 0; }, { passive: true });
+  const finishPointer = event => {
+    if (dragging && !pointerMoved) exploded = !exploded;
+    dragging = false;
+    stage.classList.remove('is-dragging');
+    canvas.releasePointerCapture?.(event.pointerId);
+  };
+  stage.addEventListener('pointerup', finishPointer);
+  stage.addEventListener('pointercancel', finishPointer);
+  stage.addEventListener('pointerleave', () => { if (!dragging) { pointerX = 0; pointerY = 0; } }, { passive: true });
 
   const observer = new IntersectionObserver(entries => { inViewport = entries[0]?.isIntersecting ?? true; }, { rootMargin: '140px' });
   observer.observe(stage);
@@ -219,13 +253,17 @@ function startScene(THREE, RoundedBoxGeometry, RoomEnvironment) {
     previousFrame = now;
     const time = clock.getElapsedTime();
     const movement = reducedMotion ? 0 : 1;
-    const targetY = -.34 + pointerX * .16;
-    const targetX = .08 + pointerY * .085;
-    device.rotation.y += (targetY - device.rotation.y) * .045;
-    device.rotation.x += (targetX - device.rotation.x) * .045;
+    const autoYaw = Math.sin(time * .38) * .13 * movement;
+    const targetY = -.34 + autoYaw + pointerX * .38 + manualYaw;
+    const targetX = .08 + pointerY * .2 + manualPitch;
+    device.rotation.y += (targetY - device.rotation.y) * .075;
+    device.rotation.x += (targetX - device.rotation.x) * .075;
     device.rotation.z = Math.sin(time * .42) * .014 * movement;
     device.position.y = Math.sin(time * .62) * .07 * movement;
-    screen.position.z = .37 + Math.sin(time * .9) * .018 * movement;
+    const screenDepth = exploded ? 1.05 : .37;
+    screen.position.z += ((screenDepth + Math.sin(time * .9) * .018 * movement) - screen.position.z) * .075;
+    innerGlow.position.z += (((exploded ? .52 : .22)) - innerGlow.position.z) * .075;
+    board.position.z += (((exploded ? .05 : .18)) - board.position.z) * .075;
     island.position.z = screen.position.z + .1;
     sensor.position.z = island.position.z + .05;
     scanner.position.z = screen.position.z + .17;

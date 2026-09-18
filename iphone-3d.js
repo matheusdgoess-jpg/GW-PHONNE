@@ -12,8 +12,8 @@ function startScene(THREE) {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const compact = window.matchMedia('(max-width: 680px)').matches;
   const lowPower = compact || (navigator.deviceMemory && navigator.deviceMemory <= 4) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !lowPower, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, lowPower ? 1.05 : 1.5));
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, lowPower ? 1.35 : 1.75));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.65;
@@ -53,43 +53,53 @@ function startScene(THREE) {
 
   const roundedSolid = (width, height, depth, radius, material, bevel = 0.055) => {
     const geometry = new THREE.ExtrudeGeometry(roundedShape(width, height, radius), {
-      depth, bevelEnabled: true, bevelSegments: compact ? 2 : 5, steps: 1,
-      bevelSize: bevel, bevelThickness: bevel, curveSegments: compact ? 8 : 16
+      depth, bevelEnabled: true, bevelSegments: compact ? 4 : 6, steps: 1,
+      bevelSize: bevel, bevelThickness: bevel, curveSegments: compact ? 14 : 20
     });
     geometry.center();
     return new THREE.Mesh(geometry, material);
   };
 
-  const frameMaterial = new THREE.MeshPhysicalMaterial({ color: 0x315b83, emissive: 0x00152f, emissiveIntensity: .7, metalness: 0.88, roughness: 0.16, clearcoat: 1, clearcoatRoughness: 0.16 });
+  const frameMaterial = new THREE.MeshPhysicalMaterial({ color: 0x183a58, emissive: 0x001428, emissiveIntensity: .55, metalness: 0.92, roughness: 0.19, clearcoat: 1, clearcoatRoughness: 0.12 });
   const glassMaterial = new THREE.MeshPhysicalMaterial({ color: 0x020712, metalness: 0.18, roughness: 0.08, transmission: 0.12, clearcoat: 1 });
   const chassis = roundedSolid(3.7, 7.35, 0.46, 0.48, frameMaterial);
   chassis.position.z = -0.28;
   device.add(chassis);
-  const frameGlow = new THREE.LineSegments(new THREE.EdgesGeometry(chassis.geometry, 18), new THREE.LineBasicMaterial({ color: 0x42dcff, transparent: true, opacity: .62 }));
-  chassis.add(frameGlow);
-
   const screenCanvas = document.createElement('canvas');
   screenCanvas.width = 640; screenCanvas.height = 1280;
   const context = screenCanvas.getContext('2d');
-  const gradient = context.createLinearGradient(60, 0, 580, 1280);
-  gradient.addColorStop(0, '#020714'); gradient.addColorStop(.42, '#032348'); gradient.addColorStop(.68, '#162b88'); gradient.addColorStop(1, '#4a117e');
+  const gradient = context.createLinearGradient(40, 0, 600, 1280);
+  gradient.addColorStop(0, '#020611'); gradient.addColorStop(.46, '#06152e'); gradient.addColorStop(.76, '#081b3e'); gradient.addColorStop(1, '#070b1c');
   context.fillStyle = gradient; context.fillRect(0, 0, 640, 1280);
-  const glow = context.createRadialGradient(430, 420, 20, 430, 420, 470);
-  glow.addColorStop(0, 'rgba(0,230,255,.72)'); glow.addColorStop(.35, 'rgba(22,100,255,.28)'); glow.addColorStop(1, 'rgba(0,0,0,0)');
-  context.fillStyle = glow; context.fillRect(0, 0, 640, 1280);
-  context.strokeStyle = 'rgba(73,224,255,.16)'; context.lineWidth = 2;
-  for (let y = 80; y < 1280; y += 80) { context.beginPath(); context.moveTo(0, y); context.lineTo(640, y); context.stroke(); }
-  context.textAlign = 'center'; context.fillStyle = '#f6fbff'; context.font = '700 128px Arial'; context.fillText('IMG', 320, 610);
-  context.fillStyle = '#55dcff'; context.font = '600 46px Arial'; context.letterSpacing = '18px'; context.fillText('T E C H', 320, 690);
-  context.fillStyle = 'rgba(220,240,255,.78)'; context.font = '500 20px Arial'; context.fillText('PRECISÃO EM CADA CAMADA', 320, 752);
+  const cyanGlow = context.createRadialGradient(470, 360, 15, 470, 360, 430);
+  cyanGlow.addColorStop(0, 'rgba(0,220,255,.46)'); cyanGlow.addColorStop(.42, 'rgba(0,100,255,.16)'); cyanGlow.addColorStop(1, 'rgba(0,0,0,0)');
+  context.fillStyle = cyanGlow; context.fillRect(0, 0, 640, 1280);
+  const violetGlow = context.createRadialGradient(150, 990, 20, 150, 990, 390);
+  violetGlow.addColorStop(0, 'rgba(105,50,255,.32)'); violetGlow.addColorStop(1, 'rgba(0,0,0,0)');
+  context.fillStyle = violetGlow; context.fillRect(0, 0, 640, 1280);
+  context.strokeStyle = 'rgba(73,224,255,.09)'; context.lineWidth = 1;
+  for (let x = 0; x <= 640; x += 64) { context.beginPath(); context.moveTo(x, 0); context.lineTo(x, 1280); context.stroke(); }
+  for (let y = 0; y <= 1280; y += 64) { context.beginPath(); context.moveTo(0, y); context.lineTo(640, y); context.stroke(); }
+  context.strokeStyle = 'rgba(73,224,255,.22)'; context.lineWidth = 3;
+  context.beginPath(); context.arc(320, 640, 205, 0, Math.PI * 2); context.stroke();
+  context.strokeStyle = 'rgba(115,82,255,.18)'; context.lineWidth = 2;
+  context.beginPath(); context.arc(320, 640, 250, 0, Math.PI * 2); context.stroke();
   const screenTexture = new THREE.CanvasTexture(screenCanvas);
   screenTexture.colorSpace = THREE.SRGBColorSpace;
 
   const display = roundedSolid(3.42, 7.02, 0.085, 0.4, new THREE.MeshBasicMaterial({ map: screenTexture, toneMapped: false }), .025);
   display.position.z = 0.12;
   device.add(display);
-  const displayGlow = new THREE.LineSegments(new THREE.EdgesGeometry(display.geometry, 18), new THREE.LineBasicMaterial({ color: 0x55ddff, transparent: true, opacity: .72 }));
-  display.add(displayGlow);
+
+  const logoTexture = new THREE.TextureLoader().load(new URL('assets/img-tech-logo-v2.png', document.baseURI).href);
+  logoTexture.colorSpace = THREE.SRGBColorSpace;
+  logoTexture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+  const phoneLogo = new THREE.Mesh(
+    new THREE.CircleGeometry(1.14, 64),
+    new THREE.MeshBasicMaterial({ map: logoTexture, transparent: true, toneMapped: false, depthWrite: false })
+  );
+  phoneLogo.position.set(0, -.05, .105);
+  display.add(phoneLogo);
 
   const notch = roundedSolid(1.15, 0.25, 0.07, 0.13, glassMaterial, .015);
   notch.position.set(0, 3.05, 0.24);
@@ -127,7 +137,16 @@ function startScene(THREE) {
   });
   device.add(cameraCluster);
 
-  const scan = new THREE.Mesh(new THREE.PlaneGeometry(3.05, .035), new THREE.MeshBasicMaterial({ color: 0x59efff, transparent: true, opacity: .95, blending: THREE.AdditiveBlending }));
+  const scanCanvas = document.createElement('canvas');
+  scanCanvas.width = 256; scanCanvas.height = 32;
+  const scanContext = scanCanvas.getContext('2d');
+  const scanGradient = scanContext.createLinearGradient(0, 0, 0, 32);
+  scanGradient.addColorStop(0, 'rgba(30,220,255,0)');
+  scanGradient.addColorStop(.5, 'rgba(90,235,255,.8)');
+  scanGradient.addColorStop(1, 'rgba(30,220,255,0)');
+  scanContext.fillStyle = scanGradient; scanContext.fillRect(0, 0, 256, 32);
+  const scanTexture = new THREE.CanvasTexture(scanCanvas);
+  const scan = new THREE.Mesh(new THREE.PlaneGeometry(2.82, .1), new THREE.MeshBasicMaterial({ map: scanTexture, transparent: true, opacity: .28, blending: THREE.AdditiveBlending, depthWrite: false }));
   scan.position.z = .3;
   device.add(scan);
 
@@ -194,7 +213,7 @@ function startScene(THREE) {
     chips.forEach(chip => { chip.position.x = board.position.x; chip.position.z = board.position.z + .14; });
     cameraCluster.position.z = -.36 + scrollProgress * 1.2;
     scan.position.y = reducedMotion ? 0 : ((time * .82) % 6.2) - 3.1;
-    scan.material.opacity = reducedMotion ? .5 : .45 + Math.sin(time * 3.2) * .35;
+    scan.material.opacity = reducedMotion ? .2 : .2 + Math.sin(time * 3.2) * .08;
     particles.rotation.y = time * .018 * movement;
     particles.rotation.z = time * .012 * movement;
     renderer.render(scene, camera);

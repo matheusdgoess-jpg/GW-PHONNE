@@ -42,16 +42,18 @@
         <div class="hero-actions"><a class="button button-primary js-whatsapp" href="https://wa.me/5514981328577?text=Olá%2C%20vim%20pelo%20site%20da%20IMG%20TECH.%20Gostaria%20de%20solicitar%20um%20diagnóstico." target="_blank" rel="noreferrer">Solicitar diagnóstico <span>↗</span></a><a class="button button-ghost" href="#acompanhar-os">Acompanhar meu reparo</a></div>
         <div class="hero-trust"><span>Diagnóstico objetivo</span><span>Orçamento antes do reparo</span><span>Atendimento registrado</span></div>
       </div>
-      <div class="hero-visual reveal" aria-label="Identidade visual IMG TECH">
+      <div class="hero-visual reveal" aria-label="iPhone 3D em diagnóstico pela IMG TECH">
         <div class="tech-rings" aria-hidden="true"><i></i><i></i><i></i></div>
-        <div class="logo-stage">
-          <img src="assets/img-tech-logo-v2.png" alt="IMG TECH">
-          <div class="repair-scan" aria-hidden="true"><i></i></div>
-          <i class="diagnostic-node node-camera" aria-hidden="true"></i>
-          <i class="diagnostic-node node-display" aria-hidden="true"></i>
+        <div class="hero-3d-stage">
+          <img class="hero-3d-fallback" src="assets/img-tech-logo-v2.png" alt="IMG TECH">
+          <canvas id="iphone-3d" aria-hidden="true"></canvas>
+          <div class="model-label label-display" aria-hidden="true"><i></i><span>DISPLAY</span></div>
+          <div class="model-label label-board" aria-hidden="true"><i></i><span>PLACA</span></div>
+          <div class="model-label label-battery" aria-hidden="true"><i></i><span>BATERIA</span></div>
+          <div class="model-interaction-hint" aria-hidden="true"><span>↔</span> Mova para explorar</div>
         </div>
         <div class="signal-card signal-card-top"><small>DIAGNÓSTICO EM EXECUÇÃO</small><b><i></i> Sistema em análise</b><span class="repair-progress" aria-hidden="true"></span></div>
-        <div class="signal-card signal-card-bottom"><span>01</span><div><small>ESPECIALIDADE</small><b>Ecossistema iPhone</b></div></div>
+        <div class="signal-card signal-card-bottom"><span>3D</span><div><small>ENGENHARIA DE REPARO</small><b>Precisão em cada camada</b></div></div>
       </div>
     </section>
     <section class="proof-strip" aria-label="Diferenciais da IMG TECH">
@@ -100,6 +102,7 @@
   <a class="whatsapp-float js-whatsapp" href="https://wa.me/5514981328577?text=Olá%2C%20vim%20pelo%20site%20da%20IMG%20TECH%20e%20preciso%20de%20ajuda%20com%20meu%20iPhone." target="_blank" rel="noreferrer" aria-label="Falar com a IMG TECH no WhatsApp"><span>✦</span><b>Falar no WhatsApp</b></a>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
   <script src="supabase-config.js"></script>
-  <script src="script.js?v=20260912"></script>
+  <script type="module" src="iphone-3d.js?v=20260918"></script>
+  <script src="script.js?v=20260918"></script>
 </body>
 </html>

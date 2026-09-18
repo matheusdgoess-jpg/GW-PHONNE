@@ -1,4 +1,4 @@
-const CACHE = 'img-tech-shell-v3';
+const CACHE = 'img-tech-shell-v4';
 const SHELL = [
   '/painel-img-tech',
   '/admin.css',
@@ -8,6 +8,7 @@ const SHELL = [
   '/login.css',
   '/login-img-tech.css',
   '/public-results.css',
+  '/iphone-3d.js',
   '/warranty-terms.js',
   '/assets/img-tech-logo-v2.png'
 ];

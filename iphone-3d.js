@@ -225,6 +225,7 @@ function startScene(THREE, RoundedBoxGeometry, RoomEnvironment) {
   ringGroup.add(ringViolet);
   ringGroup.position.z = -1.2;
   scene.add(ringGroup);
+  ringGroup.visible = false;
 
   const pointCount = lowPower ? 45 : 90;
   const positions = new Float32Array(pointCount * 3);
@@ -237,6 +238,7 @@ function startScene(THREE, RoundedBoxGeometry, RoomEnvironment) {
   particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   const particles = new THREE.Points(particleGeometry, new THREE.PointsMaterial({ color: 0x38d8ff, size: .028, transparent: true, opacity: .5, blending: THREE.AdditiveBlending, depthWrite: false }));
   scene.add(particles);
+  particles.visible = false;
 
   let pointerX = 0;
   let pointerY = 0;
@@ -319,13 +321,15 @@ function startScene(THREE, RoundedBoxGeometry, RoomEnvironment) {
     previousFrame = now;
     const time = clock.getElapsedTime();
     const movement = reducedMotion ? 0 : 1;
-    const autoYaw = Math.sin(time * .38) * .13 * movement;
+    const autoYaw = Math.sin(time * .24) * .19 * movement;
     const targetY = -.34 + autoYaw + pointerX * .38 + manualYaw + scrollTurn;
     const targetX = .08 + pointerY * .2 + manualPitch;
     device.rotation.y += (targetY - device.rotation.y) * .075;
     device.rotation.x += (targetX - device.rotation.x) * .075;
-    device.rotation.z = Math.sin(time * .42) * .014 * movement;
-    device.position.y = Math.sin(time * .62) * .07 * movement;
+    device.rotation.z = -.035 + Math.sin(time * .24) * .009 * movement;
+    device.position.y = Math.sin(time * .36) * .035 * movement;
+    keyLight.position.x = -4.8 + Math.sin(time * .3) * 1.8 * movement;
+    scanner.visible = exploded;
     const screenDepth = exploded ? 1.05 : .37;
     screen.position.z += ((screenDepth + Math.sin(time * .9) * .018 * movement) - screen.position.z) * .075;
     innerGlow.position.z += (((exploded ? .52 : .22)) - innerGlow.position.z) * .075;

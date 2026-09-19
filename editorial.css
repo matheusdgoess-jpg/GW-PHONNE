@@ -1,4 +1,10 @@
 /* IMG TECH — product-led editorial composition. */
+.scroll-scene{translate:0 var(--scroll-lift,0px);opacity:var(--scroll-visibility,1)}
+.process-steps{position:relative}
+.process-steps:before{content:'';position:absolute;top:-1px;left:0;right:0;height:2px;background:linear-gradient(90deg,#d8f7ff,#32cfff,#707aff);transform:scaleX(var(--journey-progress,0));transform-origin:left;pointer-events:none}
+.process-steps article>span{transition:color .4s,text-shadow .4s}
+.process-steps .journey-active>span{color:#e8faff;text-shadow:0 0 24px #35bdff66}
+@media(prefers-reduced-motion:reduce){.scroll-scene{translate:none;opacity:1}.process-steps:before{display:none}.process-steps article>span{transition:none}}
 .contact .contact-main,.contact .contact-secondary{color:#f5f9ff;min-width:0;padding-inline:16px;translate:none!important}
 .contact .contact-main b,.contact .contact-secondary b{color:#fff;line-height:1.3;letter-spacing:-.035em;font-variant-numeric:tabular-nums;white-space:nowrap}
 .contact .contact-main small,.contact .contact-secondary small{color:#a9c3dd;font-size:11px;letter-spacing:.12em}

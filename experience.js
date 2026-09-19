@@ -30,10 +30,37 @@
   progress.setAttribute('aria-hidden', 'true');
   document.body.append(progress);
   let scrollPending = false;
+  // Progress follows the native scroll, without trapping touch or wheel input.
+  const scrollScenes = [...document.querySelectorAll('.section-heading, .process-intro, .tracking-copy, .manifesto-copy, .contact-copy')];
+  const process = document.querySelector('.process-steps');
+  const heroVisual = document.querySelector('.hero-visual');
+  const hero = document.querySelector('.hero');
+  const clamp = value => Math.max(0, Math.min(1, value));
+  scrollScenes.forEach(element => element.classList.add('scroll-scene'));
   const updateScroll = () => {
     const max = document.documentElement.scrollHeight - innerHeight;
     progress.style.transform = `scaleX(${max > 0 ? Math.min(1, scrollY / max) : 0})`;
     document.querySelector('.site-header')?.classList.toggle('header-scrolled', scrollY > 40);
+    const viewport = innerHeight;
+    scrollScenes.forEach(element => {
+      const rect = element.getBoundingClientRect();
+      const entrance = clamp((viewport - rect.top) / (viewport * .48));
+      element.style.setProperty('--scroll-lift', `${(1 - entrance) * 48}px`);
+      element.style.setProperty('--scroll-visibility', String(.25 + entrance * .75));
+    });
+    if (process) {
+      const rect = process.getBoundingClientRect();
+      const completion = clamp((viewport * .8 - rect.top) / Math.max(1, rect.height));
+      process.style.setProperty('--journey-progress', String(completion));
+      [...process.children].forEach((step, index, steps) => {
+        step.classList.toggle('journey-active', completion >= index / steps.length);
+      });
+    }
+    if (heroVisual && hero && finePointer) {
+      const rect = hero.getBoundingClientRect();
+      const departure = clamp(-rect.top / Math.max(1, rect.height));
+      heroVisual.style.translate = `0 ${departure * 65}px`;
+    }
     scrollPending = false;
   };
   addEventListener('scroll', () => {
@@ -41,6 +68,7 @@
   }, {passive:true});
   addEventListener('resize', updateScroll, {passive:true});
   updateScroll();
+  addEventListener('pageshow', updateScroll);
   if (finePointer) {
     document.querySelectorAll('.repair-card').forEach(card => {
       card.addEventListener('pointermove', event => {

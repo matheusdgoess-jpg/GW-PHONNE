@@ -2,6 +2,9 @@ const menuButton = document.querySelector('.menu-toggle');
 const nav = document.querySelector('.nav');
 menuButton?.addEventListener('click', () => { const open = nav.classList.toggle('open'); menuButton.setAttribute('aria-expanded', String(open)); document.body.classList.toggle('menu-open', open); });
 nav?.querySelectorAll('a').forEach(link => link.addEventListener('click', () => { nav.classList.remove('open'); menuButton.setAttribute('aria-expanded', 'false'); document.body.classList.remove('menu-open'); }));
+const closeMenu = () => { nav?.classList.remove('open'); menuButton?.setAttribute('aria-expanded','false'); document.body.classList.remove('menu-open'); };
+document.addEventListener('keydown',event=>{if(event.key==='Escape'){closeMenu();menuButton?.focus();}});
+window.addEventListener('resize',()=>{if(innerWidth>1000)closeMenu();},{passive:true});
 
 const revealElements = document.querySelectorAll('.reveal');
 if ('IntersectionObserver' in window) {
@@ -25,17 +28,21 @@ const publicDate = value => value ? new Date(value.length === 10 ? `${value}T12:
 let publicClient = null;
 if (window.supabase && window.GW_SUPABASE?.url && window.GW_SUPABASE?.publishableKey) publicClient = window.supabase.createClient(window.GW_SUPABASE.url, window.GW_SUPABASE.publishableKey);
 async function loadRepairPortfolio(){
-  const section=document.getElementById('resultados');const grid=document.getElementById('public-results-grid');if(!publicClient||!section||!grid)return;
+  const section=document.getElementById('resultados');const grid=document.getElementById('public-results-grid');if(!section||!grid)return;
+  document.querySelectorAll('a[href="#resultados"]').forEach(link=>link.hidden=true);
+  if(!publicClient)return;
   const {data,error}=await publicClient.from('repair_portfolio').select('title,device_model,repair_type,description,image_path').eq('published',true).order('sort_order').order('created_at',{ascending:false});
   if(error||!data?.length){section.hidden=true;document.querySelectorAll('a[href="#resultados"]').forEach(link=>link.hidden=true);return;}
   grid.innerHTML=data.map(item=>{const imageUrl=publicClient.storage.from('repair-portfolio').getPublicUrl(item.image_path).data.publicUrl;return `<article class="result-card reveal visible"><img src="${safeText(imageUrl)}" alt="${safeText(item.title)}" loading="lazy"><div><small>${safeText(item.repair_type.toUpperCase())}</small><h3>${safeText(item.title)}</h3><p>${safeText(item.device_model)}${item.description?` · ${safeText(item.description)}`:''}</p></div></article>`}).join('');
   section.hidden=false;
+  document.querySelectorAll('a[href="#resultados"]').forEach(link=>link.hidden=false);
 }
 const trackingForm = document.getElementById('tracking-form');
 const trackingResult = document.getElementById('tracking-result');
 
 trackingForm?.addEventListener('submit', async event => {
   event.preventDefault();
+  if (trackingForm.querySelector('button').disabled) return;
   if (!trackingForm.checkValidity()) return trackingForm.reportValidity();
   const button = trackingForm.querySelector('button');
   const values = Object.fromEntries(new FormData(trackingForm).entries());
@@ -43,7 +50,12 @@ trackingForm?.addEventListener('submit', async event => {
   trackingResult.innerHTML = '<div class="tracking-loading"><i></i><span>Buscando sua ordem de serviço…</span></div>';
   try {
     if (!publicClient) throw new Error('Serviço indisponível');
-    const { data, error } = await publicClient.rpc('track_service_order', { p_order_id: Number(values.orderNumber), p_pickup_code: String(values.pickupCode).trim().toUpperCase() });
+    const controller = new AbortController();
+    const timeout = setTimeout(()=>controller.abort(),12000);
+    let response;
+    try { response = await publicClient.rpc('track_service_order', { p_order_id: Number(values.orderNumber), p_pickup_code: String(values.pickupCode).trim().toUpperCase() }).abortSignal(controller.signal); }
+    finally { clearTimeout(timeout); }
+    const { data, error } = response;
     if (error) throw error;
     const order = data?.[0];
     if (!order) { trackingResult.innerHTML = '<div class="tracking-not-found"><span>!</span><div><b>OS não localizada</b><p>Confira o número e o código exatamente como aparecem na sua via.</p></div></div>'; return; }

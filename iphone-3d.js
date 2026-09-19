@@ -17,7 +17,7 @@ function startScene(THREE, RoundedBoxGeometry, RoomEnvironment) {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const lowPower = compact || (navigator.deviceMemory && navigator.deviceMemory <= 4);
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, lowPower ? 1.35 : 1.8));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, lowPower ? 1.75 : 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.32;
@@ -32,18 +32,19 @@ function startScene(THREE, RoundedBoxGeometry, RoomEnvironment) {
   room.dispose();
   pmrem.dispose();
 
-  scene.add(new THREE.HemisphereLight(0x8cdcff, 0x030611, 1.4));
-  const keyLight = new THREE.PointLight(0x9ee9ff, 54, 22, 2);
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x343b48, 2));
+  const keyLight = new THREE.PointLight(0xffffff, 54, 22, 2);
   keyLight.position.set(-4.8, 4.6, 7);
   scene.add(keyLight);
-  const cyanLight = new THREE.PointLight(0x00cfff, 44, 19, 2);
+  const cyanLight = new THREE.PointLight(0xa8eaff, 16, 19, 2);
   cyanLight.position.set(-4.5, -2.8, 4.5);
   scene.add(cyanLight);
-  const violetLight = new THREE.PointLight(0x7457ff, 52, 20, 2);
+  const violetLight = new THREE.PointLight(0xc8c5ff, 18, 20, 2);
   violetLight.position.set(5, -1.5, 5);
   scene.add(violetLight);
 
   const device = new THREE.Group();
+  device.scale.y = 1.055;
   scene.add(device);
   // RoundedBoxGeometry clamps its radius to thickness. Extrude a rounded
   // silhouette instead so thin iPhone glass retains properly curved corners.
@@ -62,15 +63,17 @@ function startScene(THREE, RoundedBoxGeometry, RoomEnvironment) {
     return g;
   };
 
-  const frameMaterial = new THREE.MeshPhysicalMaterial({ color: 0x182b3d, metalness: .96, roughness: .18, clearcoat: 1, clearcoatRoughness: .09, envMapIntensity: 1.65 });
+  const frameMaterial = new THREE.MeshPhysicalMaterial({ color: 0xd6d8dc, metalness: .82, roughness: .29, clearcoat: .45, clearcoatRoughness: .2, envMapIntensity: 1.1 });
   const frame = new THREE.Mesh(phoneShape(4.12, 8.18, .42, .56), frameMaterial);
   frame.position.z = -.08;
   device.add(frame);
-  const rear = new THREE.Mesh(phoneShape(4,8.06,.045,.52),new THREE.MeshPhysicalMaterial({color:0x233c58,metalness:.38,roughness:.42,clearcoat:.55}));
+  const rear = new THREE.Mesh(phoneShape(4,8.06,.045,.52),new THREE.MeshPhysicalMaterial({color:0xd5d7da,metalness:.58,roughness:.36,clearcoat:.3}));
   rear.position.z = -.32;
   device.add(rear);
-  const cameraPlate = new THREE.Mesh(phoneShape(2.02,2.12,.16,.4),new THREE.MeshStandardMaterial({color:0x294660,metalness:.55,roughness:.3}));
-  cameraPlate.position.set(.83,2.69,-.45);
+  const ceramic = new THREE.Mesh(phoneShape(3.72,5.25,.018,.4),new THREE.MeshPhysicalMaterial({color:0xeeeef0,metalness:.08,roughness:.38,clearcoat:.45}));
+  ceramic.position.set(0,-1.13,-.365); device.add(ceramic);
+  const cameraPlate = new THREE.Mesh(phoneShape(3.87,2.22,.18,.4),new THREE.MeshStandardMaterial({color:0xcdd0d5,metalness:.65,roughness:.28}));
+  cameraPlate.position.set(0,2.78,-.45);
   device.add(cameraPlate);
   [[1.3,3.23],[1.3,2.2],[.36,2.72]].forEach(([x,y])=>{
     const mount = new THREE.Mesh(new THREE.CylinderGeometry(.43,.43,.16,64),frameMaterial);
@@ -80,7 +83,7 @@ function startScene(THREE, RoundedBoxGeometry, RoomEnvironment) {
     const optic = new THREE.Mesh(new THREE.SphereGeometry(.17,32,16),new THREE.MeshPhysicalMaterial({color:0x12366c,metalness:.7,roughness:.14,clearcoat:1}));
     optic.scale.z=.24; optic.position.set(x,y,-.72); device.add(optic);
   });
-  [[.36,3.43,.14,0xffedc6],[.36,2.03,.11,0x040911]].forEach(([x,y,r,color])=>{
+  [[-1.28,3.22,.15,0xfff7df],[-1.28,2.28,.13,0x17191c],[-1.28,2.74,.035,0x111111]].forEach(([x,y,r,color])=>{
     const dot=new THREE.Mesh(new THREE.SphereGeometry(r,24,16),new THREE.MeshStandardMaterial({color,roughness:.3}));
     dot.scale.z=.2; dot.position.set(x,y,-.57); device.add(dot);
   });
@@ -156,12 +159,18 @@ function startScene(THREE, RoundedBoxGeometry, RoomEnvironment) {
   const logo = new Image();
   logo.decoding = 'async';
   logo.onload = () => drawScreen(logo);
-  new THREE.TextureLoader().load('assets/apple-mark.svg', texture => {
-    texture.colorSpace = THREE.SRGBColorSpace;
-    texture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
-    const badge = new THREE.Mesh(new THREE.PlaneGeometry(.98,.98),new THREE.MeshBasicMaterial({map:texture,transparent:true,depthWrite:false,toneMapped:false}));
-    badge.rotation.y=Math.PI; badge.position.set(0,-.15,-.38); device.add(badge);
-  });
+  import('three/addons/loaders/SVGLoader.js').then(({SVGLoader}) => {
+    new SVGLoader().load('assets/apple-mark.svg', data => {
+      const mark = new THREE.Group();
+      for (const path of data.paths) for (const shape of SVGLoader.createShapes(path)) {
+        const geometry = new THREE.ShapeGeometry(shape);
+        geometry.translate(-12,-12,0);
+        const badge = new THREE.Mesh(geometry,new THREE.MeshStandardMaterial({color:0x71767d,metalness:.75,roughness:.24,side:THREE.DoubleSide}));
+        mark.add(badge);
+      }
+      mark.scale.set(-.043,-.043,.043); mark.position.set(0,-.65,-.415); device.add(mark);
+    });
+  }).catch(()=>{});
   logo.src = new URL('assets/img-tech-logo-v2.png', document.baseURI).href;
 
   const screenMaterial = new THREE.MeshPhysicalMaterial({ map: screenTexture, emissiveMap:screenTexture, emissive:0xffffff, emissiveIntensity:.35, color: 0xffffff, roughness: .28, metalness: 0, clearcoat: .4, envMapIntensity: .12 });
@@ -179,8 +188,8 @@ function startScene(THREE, RoundedBoxGeometry, RoomEnvironment) {
   sensor.position.set(.37, 3.35, .52);
   device.add(sensor);
 
-  const buttonMaterial = new THREE.MeshPhysicalMaterial({ color: 0x18384d, metalness: .94, roughness: .17, clearcoat: 1 });
-  [[-2.085, 1.55, .1, .72], [-2.085, .48, .1, 1.1], [2.085, .85, .1, 1.45]].forEach(([x, y, z, height]) => {
+  const buttonMaterial = new THREE.MeshPhysicalMaterial({ color: 0xc8cbd0, metalness: .85, roughness: .25, clearcoat: .5 });
+  [[-2.085,2.5,-.08,.32],[-2.085, 1.65, -.08, .65], [-2.085, .75, -.08, .65], [2.085, 1.05, -.08, 1.15],[2.085,-1.8,-.08,.85]].forEach(([x, y, z, height]) => {
     const button = new THREE.Mesh(new RoundedBoxGeometry(.09, height, .16, 4, .04), buttonMaterial);
     button.position.set(x, y, z);
     device.add(button);
@@ -256,6 +265,7 @@ function startScene(THREE, RoundedBoxGeometry, RoomEnvironment) {
   window.addEventListener('scroll',updateScrollTurn,{passive:true});
   updateScrollTurn();
   stage.addEventListener('pointerdown', event => {
+    if (event.button !== 0 || !event.isPrimary) return;
     dragging = true;
     pointerMoved = false;
     previousPointerX = event.clientX;
@@ -283,7 +293,7 @@ function startScene(THREE, RoundedBoxGeometry, RoomEnvironment) {
     if (event.type !== 'pointercancel' && dragging && !pointerMoved) exploded = !exploded;
     dragging = false;
     stage.classList.remove('is-dragging');
-    canvas.releasePointerCapture?.(event.pointerId);
+    if (canvas.hasPointerCapture?.(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
   };
   stage.addEventListener('pointerup', finishPointer);
   stage.addEventListener('pointercancel', finishPointer);

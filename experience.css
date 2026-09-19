@@ -1,4 +1,27 @@
 /* IMG TECH motion direction; SpotlightCard adapted from React Bits. */
+.motion-section{position:relative;isolation:isolate}
+.section-light{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.section-light:after{content:'';position:absolute;inset:-20%;background:radial-gradient(ellipse at 18% 35%,#009dff19,transparent 42%),radial-gradient(ellipse at 80% 65%,#7654ff16,transparent 40%);animation:section-atmosphere 18s ease-in-out infinite alternate;animation-play-state:paused}
+.motion-in-view>.section-light:after{animation-play-state:running}
+@keyframes section-atmosphere{from{transform:translate(-3%,-3%) scale(.92)}to{transform:translate(5%,4%) scale(1.1)}}
+.light-surface{position:relative;isolation:isolate;overflow:hidden}
+.light-surface:not(.repair-card):before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(420px circle at var(--mouse-x,50%) var(--mouse-y,50%),#00cfff20,transparent 75%);opacity:0;transition:opacity .4s}
+.light-surface:hover:before,.light-surface:focus-within:before{opacity:1}
+.process,.order-tracking,.contact{background:linear-gradient(140deg,#08101e,#060b15);border-color:#7bbaff20}
+.process-steps{border-top:0;display:grid;gap:14px}.process-steps article{padding:28px;border:1px solid #8db8ff25;border-radius:20px;background:#0a1524b3;transition:background .3s,border-color .3s,box-shadow .3s}
+.process-steps article:hover{background:#0d1e31;border-color:#00d9ff66;box-shadow:0 14px 36px #0002}
+.process-steps article>span{width:40px;height:40px;display:grid;place-items:center;border:1px solid #00d9ff40;border-radius:50%;background:#00c8ff0a;font-size:12px}
+.process-steps p,.tracking-copy>p,.contact-intro>p{font-size:15px;line-height:1.75}
+.tracking-card,.contact-panel{background:linear-gradient(145deg,#0d1c2fdd,#08101bdd);border:1px solid #93caff33;box-shadow:0 24px 80px #0003,inset 0 1px 0 #ffffff0c;transition:border-color .35s,box-shadow .35s}
+.tracking-card:focus-within,.contact-panel:hover{border-color:#00d9ff77;box-shadow:0 24px 80px #0003,0 0 34px #00aaff12}
+.tracking-card input{transition:border-color .25s,box-shadow .25s,background .25s}.tracking-card input:focus{outline:none;border-color:#00d9ff;box-shadow:0 0 0 3px #00d9ff15;background:#0c1b2b}
+.contact-main,.contact-secondary{transition:translate .25s,background .3s,border-color .3s}.contact-main:hover,.contact-secondary:hover{background:#102842;border-color:#41cfff66}
+.text-link{transition:translate .25s,color .25s}.text-link:hover{color:#dcfaff}
+.manifesto{background:radial-gradient(ellipse at 25% 40%,#1345862b,transparent 65%)}
+.result-card{overflow:hidden}.result-card img{transition:transform .7s cubic-bezier(.2,.75,.2,1)}.result-card:hover img{transform:scale(1.035)}
+footer{background:linear-gradient(160deg,#091321,#03070d)}footer nav a{transition:color .25s,text-shadow .25s}footer nav a:hover{text-shadow:0 0 18px #00d9ff88}
+@media(max-width:680px){.process-steps article{padding:22px 18px;gap:15px}.section-light:after{animation-duration:26s}.tracking-card,.contact-panel{box-shadow:0 14px 40px #0002}}
+@media(prefers-reduced-motion:reduce){.section-light{display:none}.result-card:hover img{transform:none}.tracking-card,.contact-panel,.tracking-card input,.contact-main,.contact-secondary,.text-link{transition:none}}
 @supports(overflow:clip){html,body{overflow-x:clip}}
 .tracking-card input{font-size:16px}
 .hero-visual.is-3d-fallback .phone-views{display:none}

@@ -2,7 +2,8 @@
  * https://github.com/DavidHDev/react-bits — see REACT-BITS-LICENSE.txt. */
 (() => {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  document.querySelectorAll('.repair-card').forEach(card => {
+  document.querySelectorAll('.repair-card, .tracking-card, .contact-panel, .process-steps article, .proof-strip article').forEach(card => {
+    card.classList.add('light-surface');
     card.addEventListener('pointermove', event => {
       const rect = card.getBoundingClientRect();
       card.style.setProperty('--mouse-x', `${event.clientX - rect.left}px`);
@@ -11,6 +12,15 @@
   });
   if(reduced) return;
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const sections = document.querySelectorAll('main > section');
+  const ambientObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => entry.target.classList.toggle('motion-in-view', entry.isIntersecting));
+  }, {rootMargin:'80px'});
+  sections.forEach(section => {
+    section.classList.add('motion-section');
+    const light = document.createElement('div'); light.className='section-light'; light.setAttribute('aria-hidden','true'); section.prepend(light);
+    ambientObserver.observe(section);
+  });
   const aurora = document.createElement('div');
   aurora.className = 'img-aurora';
   aurora.setAttribute('aria-hidden', 'true');
@@ -40,7 +50,7 @@
       }, {passive:true});
       card.addEventListener('pointerleave', () => {card.style.setProperty('--tilt-x','0deg');card.style.setProperty('--tilt-y','0deg');});
     });
-    document.querySelectorAll('.hero-actions .button, .contact-main').forEach(button => {
+    document.querySelectorAll('.button:not([type="submit"]), .contact-main, .contact-secondary, .text-link').forEach(button => {
       button.addEventListener('pointermove', event => {
         const r=button.getBoundingClientRect();
         button.style.translate=`${(event.clientX-r.left-r.width/2)*.06}px ${(event.clientY-r.top-r.height/2)*.1}px`;
@@ -84,8 +94,13 @@
       });
     }, {threshold:.12});
     document.querySelectorAll('.repair-grid, .process-steps, .proof-strip').forEach(group => {
-      [...group.children].forEach((element,index) => {element.dataset.motionDelay=String((index%3)*90);observer.observe(element);});
+      [...group.children].filter(element=>!element.hasAttribute('aria-hidden')).forEach((element,index) => {element.dataset.motionDelay=String((index%3)*90);observer.observe(element);});
     });
+    document.querySelectorAll('.tracking-card, .contact-panel, .manifesto-logo, .manifesto blockquote, footer > :not(.section-light)').forEach(element=>observer.observe(element));
+    const resultGrid=document.getElementById('public-results-grid');
+    if(resultGrid) new MutationObserver(()=>resultGrid.querySelectorAll('.result-card:not([data-motion-ready])').forEach((card,index)=>{
+      card.dataset.motionReady='true'; card.dataset.motionDelay=String((index%3)*90); observer.observe(card);
+    })).observe(resultGrid,{childList:true});
   }
   document.querySelectorAll('.hero h1').forEach(title => {
     title.animate([{opacity:0,filter:'blur(12px)',transform:'translateY(28px)'},{opacity:1,filter:'blur(0)',transform:'translateY(0)'}],{duration:1100,easing:'cubic-bezier(.2,.7,.2,1)'});
